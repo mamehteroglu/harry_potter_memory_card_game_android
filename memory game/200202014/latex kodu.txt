@@ -1,0 +1,203 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+\usepackage{graphicx}
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\begin{document}
+
+\title{Harry Potter: Memory Master
+\\
+
+\thanks{Kocaeli Üniversitesi.}
+}
+
+
+
+\maketitle
+\begin{figure}
+    \centering
+    \includegraphics[width=9cm]{ee.jpg}
+    \caption{}
+    \label{fig:my_label}
+\end{figure}
+
+
+
+
+\section{Özet}
+Bu rapor Yazılım Laboratuvarı I Dersinin 3.Projesisini açıklamak ve sunumunu gerçeklestirmek amacıyla olusturulmuştur.Raporda projenin tanımı , yapım aşaması ,kullanılan araç ve yöntemler , kod parçacıkları vb. bulunmaktadır. Proje aşamasında yararlanılan kaynaklar raporun son bölümünde bulunmaktadır. 
+
+\section{Amaç}
+Bu proje ile Android uygulama ve bulut bilişim teknolojilerinin kullanılması amaçlanmaktadır.
+Projede belirtilen süre içinde zorluk seviyesine göre kartları doğru eşleştirmek gerekmektedir. Projeyi Android uygulama olarak geliştirmemiz beklenmektedir. 
+
+
+\section{Giriş}
+Bu projede istenilen kotlin veya java ile android mobil geliştirme yapmamız istenmektedir.
+
+
+
+\subsection{Başlamadan önce}\label{AA}
+Projeye başlamadan projeyi KOTLİN ve ANDROİD STUDİO ile yapmaya karar verdik.Database olarak ise FİREBASE kullanmaya karar verdik. ve kodlamaya girmeden önce mobil uygulama ve mobil oyunlar hakkında çeşitli makalelerden detaylı araştırma yaptık.Bu projede nasıl kullanmamız gerektiğini belirledikten sonra projeye başladık.
+
+
+
+
+\subsection{Başlangıç}
+Projede istenilen şekilde kullanıcı giriş ekranı yapmayya başladık.Kullanıcı kayıt etmek için firebasein hazır fonksiyonu olan auth.signInWithEmailAndPassword(email, password) fonksiyonunu kullandık bu sayede şifreleri güvenli bir şekilde tuttuk.
+
+
+\subsection{ilerleyiş}
+Daha sonra şifremizi güvenli bir şekilde değiştirmek amacıyla yine firebasein bize sunduğu hizmet olan şifremi unuttum kolaylığını projemize ekledik.Daha sonra oyunu yapmaya başladık.
+
+
+
+\section{Sonuç}
+Firebase firestore databaseini kullanarak verilerimizi ev,foto,evpuanı vs. olarak giriş yaptık.Daha sonra onları çekmemiz gerektiği için fun InitMemoryCard (bknz. Fig. 7. ) isminde bir fonksiyon yazmamız gerekti.Bu fonksiyonda verileri tek tek aldık ve daha önceden oluşturduğumuz MemoryCardData isimli data classlarımızı doldurduk.Her eve ait 4 adet mutable dizi oluşturduk. ve bu data kartlarımızı bu dizilere ekledik.Her oyun farklı kart gelmesi için dizileri karıştırmak için (.shuffle()) kullandık.Daha sonra oyunun zorluğuna göre bu dizilerden yeterli sayıda büyücüyü alıp geçici birer diziye gönderdik.Oyunda her karttan iki tane olacağından dolayı.geçici dizileri kendine bir daha ekledik ve bu dizileri en son bir dizide toplayıp shuffle attık ve oyunun algoritmasını yazdık.
+
+
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=5cm]{giris.jpeg}
+    \caption{Giriş Ekranı İçin Oluşturdğumuz Ekran}
+    \label{fig:my_label}
+\end{figure}
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=5cm]{zorluk.jpeg}
+    \caption{Kaç kişili ve oyun zorluğunu seçtiğimiz radio buttonlu ekran}
+    \label{fig:my_label}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=5cm]{6x6.jpeg}
+    \caption{6x6 tek kişilik ekrandan bir görüntü}
+    
+    
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[width=5.4cm]{6x6_2.jpeg}
+    \caption{6x6 çift kişilik ekrandan bir görüntü}
+    
+    
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[width=8.8cm]{muzik.jpeg}
+    \caption{Sesleri çaldırmak için tanımladığımız mediaplayerlar}
+    
+    
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[width=8.8cm]{image.png}
+    \caption{Verileri firestoredan çekmek için yazdığımız fonksiyon}
+\end{figure} 
+
+\begin{figure}
+    \centering
+    \includegraphics[width=8.8cm]{doldurma.jpeg}
+    \caption{InıtMemoryCard fonksiyonu ile memorycard datalarımızın içini dolduruyoruz}
+    
+    
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[width=8.8cm]{base64.jpeg}
+    \caption{Base 64 stringini fotoğrafa çeviren fonksiyonumuz}
+    
+    
+   
+    
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[width=8.8cm]{hashmap.jpeg}
+    \caption{hashmap kullanarak 6x6 oyun zorluğunun fotoğraf ve kart bilgileri eşleştirmesi}
+    
+    
+\end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[width=8.8cm]{timer.jpeg}
+    \caption{Geçen ve kalan süreyi tuttuğumuz kod parçacığı}
+    
+    
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=8.8cm]{resetgame.jpeg}
+    \caption{Eğer yanlış yapılırsa kartların arka yüzünü gösteren fun ResetGame() fonksiyonumuz}
+    
+    
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+\newpage
+\newpage
+
+\newpage
+\vspace{12pt}
+\color{red}
+Projeyi Hazırlayanlar:\\
+Berke Kara-190202086\\
+Mehmet ALi Mehteroğlu-200202014
+\begin{itemize}
+
+
+
+\item https://www.youtube.com/watch?v=U4Wtjewy7EY&t=3622sabchannel=RahulPandey
+\item https://www.youtube.com/watch?v=QTScRS9MhqA
+\item https://console.firebase.google.com/?pli=1
+\item https://www.youtube.com/watch?v=7vWoi8j5vL4&abchannel=AdobeinaMinute
+\item https://stackoverflow.com/
+
+
+
+\end{itemize}
+\end{document}
+
+    

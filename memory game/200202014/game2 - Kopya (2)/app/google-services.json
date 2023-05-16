@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "837510796182",
+    "project_id": "harrypottermemorycardgame",
+    "storage_bucket": "harrypottermemorycardgame.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:837510796182:android:2b6b0f00b6b105d2b9c3b7",
+        "android_client_info": {
+          "package_name": "com.example.harrypottergame"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "837510796182-bpvvk7e9staqa7hcro2kol4ufuflehl3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsuAc1t-3DblcZFOCD48VS9YeNFTxZ40A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "837510796182-bpvvk7e9staqa7hcro2kol4ufuflehl3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:837510796182:android:d8e5539927389a0bb9c3b7",
+        "android_client_info": {
+          "package_name": "com.example.harrypottermemorygame"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "837510796182-bpvvk7e9staqa7hcro2kol4ufuflehl3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsuAc1t-3DblcZFOCD48VS9YeNFTxZ40A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "837510796182-bpvvk7e9staqa7hcro2kol4ufuflehl3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

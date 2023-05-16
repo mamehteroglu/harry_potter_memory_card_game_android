@@ -1,0 +1,4048 @@
+package com.example.harrypottergame
+
+import android.content.Intent
+import android.os.Bundle
+import android.util.Log
+import android.view.MenuItem
+import android.view.View
+import android.widget.Button
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+
+class FeedActivity : AppCompatActivity() {
+
+
+    private lateinit var levelRadioGroup: RadioGroup
+    private lateinit var playerRadioGroup: RadioGroup
+    private lateinit var sPRadioButton: RadioButton
+    private lateinit var mPRadioButton: RadioButton
+    private lateinit var twoRadioButton: RadioButton
+    private lateinit var fourRadioButton: RadioButton
+    private lateinit var sixRadioButton: RadioButton
+    private lateinit var startButton: Button
+    lateinit var text: TextView
+    lateinit var usernameText: TextView
+    private lateinit var database: DatabaseReference
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+
+        setContentView(R.layout.activity_feed)
+        var playerCount = 0
+        var difficulty = 0
+        playerRadioGroup = findViewById(R.id.playerCheckRadioGroup)
+        levelRadioGroup = findViewById(R.id.levelRadioGroupCheck)
+        sPRadioButton = findViewById(R.id.onePlayerRadioButton)
+        mPRadioButton = findViewById(R.id.twoPlayerRadioButton)
+        twoRadioButton = findViewById(R.id.twoByTwoRadioButton)
+        fourRadioButton = findViewById(R.id.fourByFourRadioButton)
+        sixRadioButton = findViewById(R.id.sixBySixRadioButton)
+        startButton = findViewById(R.id.startGameButton)
+        text = findViewById(R.id.textView)
+        usernameText = findViewById(R.id.textusername1)
+
+
+
+        val extras = intent.extras
+
+        val email = intent.getStringExtra("email")
+        //The key argument here must match that used in the other activity
+
+       database = FirebaseDatabase.getInstance("https://harrypottermemorycardgame-default-rtdb.europe-west1.firebasedatabase.app").reference
+
+
+        var username = database.child("Users").child(email!!).get()
+            .addOnSuccessListener {
+                  it.value.toString()
+               usernameText.setText(it.child("username").value.toString())
+
+                }
+
+
+
+
+
+                sPRadioButton.setOnClickListener {
+                    levelRadioGroup.visibility = View.VISIBLE
+                    text.visibility = View.VISIBLE
+
+
+                    playerCount = 1
+                }
+
+                mPRadioButton.setOnClickListener() {
+                    levelRadioGroup.visibility = View.VISIBLE
+                    text.visibility = View.VISIBLE
+                    playerCount = 2
+                }
+
+                twoRadioButton.setOnClickListener {
+                    startButton.visibility = View.VISIBLE
+                    difficulty = 1
+                }
+
+                fourRadioButton.setOnClickListener {
+                    startButton.visibility = View.VISIBLE
+                    difficulty = 2
+                }
+
+                sixRadioButton.setOnClickListener {
+                    startButton.visibility = View.VISIBLE
+                    difficulty = 3
+                }
+
+                startButton.setOnClickListener {
+
+
+                    if (playerCount == 1 && difficulty == 1) {
+                        val intent = Intent(this, TwoTwoActivity::class.java)
+                        intent.putExtra("email",email)
+                        startActivity(intent)
+                        finish()
+
+                    } else if (playerCount == 1 && difficulty == 2) {
+
+                        val intent = Intent(this, FourFourActivity::class.java)
+                        intent.putExtra("email",email)
+                        startActivity(intent)
+                        finish()
+
+                    } else if (playerCount == 1 && difficulty == 3) {
+
+                        val intent = Intent(this, SixSixActivity::class.java)
+                        intent.putExtra("email",email)
+                        startActivity(intent)
+                        finish()
+
+                    } else if (playerCount == 2 && difficulty == 1) {
+
+                        val intent = Intent(this, TwoTwo_2Activity::class.java)
+                        intent.putExtra("email",email)
+                        startActivity(intent)
+                        finish()
+
+                    } else if (playerCount == 2 && difficulty == 2) {
+
+                        val intent = Intent(this, FourFour_2Activity::class.java)
+                        intent.putExtra("email",email)
+                        startActivity(intent)
+                        finish()
+
+                    } else if (playerCount == 2 && difficulty == 3) {
+
+                        val intent = Intent(this, SixSix_2Activity::class.java)
+                        intent.putExtra("email",email)
+                        startActivity(intent)
+                        finish()
+
+                    }
+
+
+                }
+
+
+
+
+    }
+
+
+
+
+
+    }
+
+
+package com.example.harrypottergame
+
+import android.content.DialogInterface
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.media.MediaPlayer
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.os.CountDownTimer
+import android.os.Handler
+import android.util.Base64
+import android.util.Log
+import android.view.View
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import com.google.firebase.firestore.FirebaseFirestore
+
+class FourFour_2Activity : AppCompatActivity() {
+    private lateinit var image1 : ImageView
+    private lateinit var image2 : ImageView
+    private lateinit var image3 : ImageView
+    private lateinit var image4 : ImageView
+    private lateinit var image5 : ImageView
+    private lateinit var image6 : ImageView
+    private lateinit var image7 : ImageView
+    private lateinit var image8 : ImageView
+    private lateinit var image9 : ImageView
+    private lateinit var image10 : ImageView
+    private lateinit var image11 : ImageView
+    private lateinit var image12 : ImageView
+    private lateinit var image13 : ImageView
+    private lateinit var image14 : ImageView
+    private lateinit var image15 : ImageView
+    private lateinit var image16 : ImageView
+
+    private lateinit var testImage: ImageView
+    private lateinit var firstPlayerTextView: TextView
+    private lateinit var secondPlayerTextView: TextView
+    private lateinit var secondPlayerScoreTextView: TextView
+    private lateinit var firstPlayerScoreTextView: TextView
+    private lateinit var timeTextView: TextView
+    private lateinit var getDataButton: Button
+    private lateinit var setDataButton: Button
+    var isOneCardFlipped: Boolean = false
+    var isTwoCardsFlipped: Boolean = false
+    private var firstCard: ImageView? = null
+    private var secondCard: ImageView? = null
+    private var isFirstPlayerTurn: Boolean = true
+    private var isSecondPlayerTurn: Boolean = false
+    private var isInGame : Boolean = true;
+    private var firstPlayerScore = 0;
+    private var secondPlayerScore = 0;
+    private var firstPlayerPoint :Long =0
+    private var secondPlayerPoint:Long = 0
+
+    private var winMessage = ""
+
+    private lateinit var mediaPLayer : MediaPlayer
+    private lateinit var mediaPlayer1 : MediaPlayer
+    private lateinit var mediaPlayer2 : MediaPlayer
+    private lateinit var mediaPlayer3 : MediaPlayer
+
+    var memoryCardDataListg = mutableListOf<MemoryCardData>()
+    var memoryCardDataLists = mutableListOf<MemoryCardData>()
+    var memoryCardDataListh = mutableListOf<MemoryCardData>()
+    var memoryCardDataListr = mutableListOf<MemoryCardData>()
+
+    var email = String()
+
+    var tempListg = mutableListOf<MemoryCardData>()
+    var tempLists = mutableListOf<MemoryCardData>()
+    var tempListh = mutableListOf<MemoryCardData>()
+    var tempListr = mutableListOf<MemoryCardData>()
+
+    var allTempList = mutableListOf<MemoryCardData>()
+
+
+
+
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_four_four2)
+
+        email = intent.getStringExtra("email")!!
+
+        var hashMap: HashMap<ImageView, MemoryCardData> = HashMap<ImageView, MemoryCardData>()
+        var imageViewList = mutableListOf<ImageView>()
+        var memoryCardDataList = mutableListOf<MemoryCardData>()
+
+
+
+
+
+        if(!this::mediaPLayer.isInitialized){
+            mediaPLayer = MediaPlayer.create(this, R.raw.prologue)
+            mediaPLayer.start()
+
+        }
+        if(!this::mediaPlayer1.isInitialized){
+            mediaPlayer1 = MediaPlayer.create(this, R.raw.shocked)
+
+
+        }
+        if(!this::mediaPlayer2.isInitialized){
+            mediaPlayer2 = MediaPlayer.create(this, R.raw.congratulations)
+
+
+        }
+        if(!this::mediaPlayer3.isInitialized){
+            mediaPlayer3 = MediaPlayer.create(this, R.raw.dogrukart)
+
+
+        }
+
+
+
+
+        timeTextView = findViewById<TextView>(R.id.timeTextView4_2)
+
+        image1 = findViewById<ImageView>(R.id.imageView400_2)
+        image2 = findViewById<ImageView>(R.id.imageView401_2)
+        image3 = findViewById<ImageView>(R.id.imageView402_2)
+        image4 = findViewById<ImageView>(R.id.imageView403_2)
+        image5 = findViewById<ImageView>(R.id.imageView404_2)
+        image6 = findViewById<ImageView>(R.id.imageView405_2)
+        image7 = findViewById<ImageView>(R.id.imageView406_2)
+        image8 = findViewById<ImageView>(R.id.imageView407_2)
+        image9 = findViewById<ImageView>(R.id.imageView408_2)
+        image10 = findViewById<ImageView>(R.id.imageView409_2)
+        image11 = findViewById<ImageView>(R.id.imageView410_2)
+        image12 = findViewById<ImageView>(R.id.imageView411_2)
+        image13 = findViewById<ImageView>(R.id.imageView412_2)
+        image14 = findViewById<ImageView>(R.id.imageView413_2)
+        image15 = findViewById<ImageView>(R.id.imageView414_2)
+        image16 = findViewById<ImageView>(R.id.imageView415_2)
+
+        firstPlayerTextView = findViewById<TextView>(R.id.player1id_2)
+        secondPlayerTextView = findViewById<TextView>(R.id.player2id_2)
+        firstPlayerScoreTextView = findViewById<TextView>(R.id.player1scoreid_2)
+        secondPlayerScoreTextView = findViewById<TextView>(R.id.player2scoreid_2)
+
+        secondPlayerTextView.visibility = View.INVISIBLE
+
+
+        var MemoryCardData1 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData2 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData3 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData4 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData5 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData6 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData7 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData8 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData9 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData10 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData11 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData12 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData13 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData14 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData15 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData16 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData17 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData18 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData19 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData20 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData21 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData22 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData23 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData24 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData25 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData26 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData27 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData28 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData29 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData30 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData31 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData32 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData33 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData34 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData35 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData36 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData37 = MemoryCardData(null, null, null, null, null, null)
+
+        memoryCardDataListg.add(MemoryCardData1)
+        memoryCardDataListg.add(MemoryCardData2)
+        memoryCardDataListg.add(MemoryCardData3)
+        memoryCardDataListg.add(MemoryCardData4)
+        memoryCardDataListg.add(MemoryCardData5)
+        memoryCardDataListg.add(MemoryCardData6)
+        memoryCardDataListg.add(MemoryCardData7)
+        memoryCardDataListg.add(MemoryCardData8)
+        memoryCardDataListg.add(MemoryCardData9)
+        memoryCardDataListg.add(MemoryCardData10)
+
+
+        memoryCardDataLists.add(MemoryCardData11)
+        memoryCardDataLists.add(MemoryCardData12)
+        memoryCardDataLists.add(MemoryCardData13)
+        memoryCardDataLists.add(MemoryCardData14)
+        memoryCardDataLists.add(MemoryCardData15)
+        memoryCardDataLists.add(MemoryCardData16)
+        memoryCardDataLists.add(MemoryCardData17)
+        memoryCardDataLists.add(MemoryCardData18)
+        memoryCardDataLists.add(MemoryCardData19)
+        memoryCardDataLists.add(MemoryCardData20)
+        memoryCardDataLists.add(MemoryCardData21)
+
+
+
+        memoryCardDataListh.add(MemoryCardData22)
+        memoryCardDataListh.add(MemoryCardData23)
+        memoryCardDataListh.add(MemoryCardData24)
+        memoryCardDataListh.add(MemoryCardData25)
+        memoryCardDataListh.add(MemoryCardData26)
+        memoryCardDataListh.add(MemoryCardData27)
+        memoryCardDataListh.add(MemoryCardData28)
+        memoryCardDataListh.add(MemoryCardData29)
+        memoryCardDataListh.add(MemoryCardData30)
+
+
+
+        memoryCardDataListr.add(MemoryCardData31)
+        memoryCardDataListr.add(MemoryCardData32)
+        memoryCardDataListr.add(MemoryCardData33)
+        memoryCardDataListr.add(MemoryCardData34)
+        memoryCardDataListr.add(MemoryCardData35)
+        memoryCardDataListr.add(MemoryCardData36)
+        memoryCardDataListr.add(MemoryCardData37)
+
+
+
+        //huff ilk 2 si,
+        //raven ilk 3 ü
+
+
+
+        InitMemoryCard("gryffindor", "AlbusDumbledore",MemoryCardData1)
+        InitMemoryCard("gryffindor", "ArthurWeasley", MemoryCardData2)
+        InitMemoryCard("gryffindor", "HarryPotter", MemoryCardData3)
+        InitMemoryCard("gryffindor", "HermioneGranger", MemoryCardData4)
+        InitMemoryCard("gryffindor", "LilyPotter", MemoryCardData5)
+        InitMemoryCard("gryffindor", "MinervaMcGonagall", MemoryCardData6)
+        InitMemoryCard("gryffindor", "PeterPettigrew", MemoryCardData7)
+        InitMemoryCard("gryffindor", "RemusLupin", MemoryCardData8)
+        InitMemoryCard("gryffindor", "RubeusHagrid", MemoryCardData9)
+        InitMemoryCard("gryffindor", "SiriusBlack", MemoryCardData10)
+
+
+
+
+        InitMemoryCard("slytherin", "AndromedaTonks", MemoryCardData11)
+        InitMemoryCard("slytherin", "BellatrixLestrange", MemoryCardData12)
+        InitMemoryCard("slytherin", "DoloresUmbridge", MemoryCardData13)
+        InitMemoryCard("slytherin", "DracoMalfoy", MemoryCardData14)
+        InitMemoryCard("slytherin", "EvanRosier", MemoryCardData15)
+        InitMemoryCard("slytherin", "HoraceSlughorn", MemoryCardData16)
+        InitMemoryCard("slytherin", "LetaLestrange", MemoryCardData17)
+        InitMemoryCard("slytherin", "LuciusMalfoy", MemoryCardData18)
+        InitMemoryCard("slytherin", "NarcissaMalfoy", MemoryCardData19)
+        InitMemoryCard("slytherin", "SeverusSnape", MemoryCardData20)
+        InitMemoryCard("slytherin", "TomRiddle", MemoryCardData21)
+
+
+
+
+        InitMemoryCard("hufflepuff", "CedricDiggory",MemoryCardData22)
+        InitMemoryCard("hufflepuff", "ErnestMacmillan", MemoryCardData23)
+        InitMemoryCard("hufflepuff", "FatFriar", MemoryCardData24)
+        InitMemoryCard("hufflepuff", "HannahAbbott", MemoryCardData25)
+        InitMemoryCard("hufflepuff", "HelgaHufflepuff", MemoryCardData26)
+        InitMemoryCard("hufflepuff", "NymphadoraTonks", MemoryCardData27)
+        InitMemoryCard("hufflepuff", "PomonaSprout", MemoryCardData28)
+        InitMemoryCard("hufflepuff", "SilvanusKettleburn", MemoryCardData29)
+        InitMemoryCard("hufflepuff", "TedLupin", MemoryCardData30)
+
+
+
+        InitMemoryCard("ravenclaw", "FiliusFlitwick",MemoryCardData31)
+        InitMemoryCard("ravenclaw", "GarrickOllivander", MemoryCardData32)
+        InitMemoryCard("ravenclaw", "MarcusBelby", MemoryCardData33)
+        InitMemoryCard("ravenclaw", "MyrtleWarren", MemoryCardData34)
+        InitMemoryCard("ravenclaw", "PadmaPatil", MemoryCardData35)
+        InitMemoryCard("ravenclaw", "QuirinusQuirrell", MemoryCardData36)
+        InitMemoryCard("ravenclaw", "RowenaRavenclaw", MemoryCardData37)
+
+
+
+        memoryCardDataListg.shuffle()
+        memoryCardDataLists.shuffle()
+        memoryCardDataListh.shuffle()
+        memoryCardDataListr.shuffle()
+
+        tempListg = memoryCardDataListg.take(2) as MutableList<MemoryCardData>
+        tempLists = memoryCardDataLists.take(2) as MutableList<MemoryCardData>
+        tempListh = memoryCardDataListh.take(2) as MutableList<MemoryCardData>
+        tempListr = memoryCardDataListr.take(2) as MutableList<MemoryCardData>
+
+
+        tempListg.addAll(tempListg)
+        tempLists.addAll(tempLists)
+        tempListh.addAll(tempListh)
+        tempListr.addAll(tempListr)
+
+
+        allTempList.addAll(tempLists)
+        allTempList.addAll(tempListg)
+        allTempList.addAll(tempListh)
+        allTempList.addAll(tempListr)
+
+        allTempList.shuffle()
+
+
+
+        imageViewList.add(image1)
+        imageViewList.add(image2)
+        imageViewList.add(image3)
+        imageViewList.add(image4)
+        imageViewList.add(image5)
+        imageViewList.add(image6)
+        imageViewList.add(image7)
+        imageViewList.add(image8)
+        imageViewList.add(image9)
+        imageViewList.add(image10)
+        imageViewList.add(image11)
+        imageViewList.add(image12)
+        imageViewList.add(image13)
+        imageViewList.add(image14)
+        imageViewList.add(image15)
+        imageViewList.add(image16)
+
+
+
+
+        hashMap.put(image1,allTempList[0])
+        hashMap.put(image2,allTempList[1])
+        hashMap.put(image3,allTempList[2])
+        hashMap.put(image4,allTempList[3])
+        hashMap.put(image5,allTempList[4])
+        hashMap.put(image6,allTempList[5])
+        hashMap.put(image7,allTempList[6])
+        hashMap.put(image8,allTempList[7])
+        hashMap.put(image9,allTempList[8])
+        hashMap.put(image10,allTempList[9])
+        hashMap.put(image11,allTempList[10])
+        hashMap.put(image12,allTempList[11])
+        hashMap.put(image13,allTempList[12])
+        hashMap.put(image14,allTempList[13])
+        hashMap.put(image15,allTempList[14])
+        hashMap.put(image16,allTempList[15])
+
+
+
+        for (imageView in imageViewList) {
+
+            imageView.setOnClickListener {
+
+                if (isOneCardFlipped) {
+
+
+                    val valueOfElement = hashMap.getValue(imageView)
+                    valueOfElement.isFlipped = true
+                    isTwoCardsFlipped = true
+                    imageView.setImageBitmap(ReturnBitmap(valueOfElement.photoStringBase64!!))
+                    secondCard = imageView
+                    var valueOfFirstCard = hashMap.getValue(firstCard!!)
+                    var valueOfSecondCard = hashMap.getValue(secondCard!!)
+
+
+                    if (valueOfFirstCard.photoStringBase64 == valueOfSecondCard.photoStringBase64) {
+                        mediaPlayer3.start()
+                        //match olduysa
+                        firstCard!!.setOnClickListener(null)
+                        secondCard!!.setOnClickListener(null)
+                        imageViewList.remove(firstCard)
+                        imageViewList.remove(secondCard)
+                        firstCard = null
+                        secondCard = null
+                        isOneCardFlipped = false
+                        isTwoCardsFlipped = false
+
+                        if (isFirstPlayerTurn) {
+                            var correctPoint = 2* valueOfFirstCard.housePoint!! * valueOfFirstCard.wizardPoint!!
+                            firstPlayerPoint += correctPoint
+                            firstPlayerScoreTextView.text = firstPlayerPoint.toString()
+                            firstPlayerScore += 1;
+
+                        } else {
+                            var correctPoint = 2* valueOfFirstCard.housePoint!! * valueOfFirstCard.wizardPoint!!
+                            secondPlayerPoint += correctPoint
+                            secondPlayerScoreTextView.text = secondPlayerPoint.toString()
+                            secondPlayerScore += 1;
+                        }
+
+                        if (firstPlayerScore + secondPlayerScore == 8) {
+                            mediaPLayer.stop()
+                            mediaPlayer2.start()
+                            isInGame = false
+                            //BURASI!'1!!!!!!!!!!!!!!!!
+
+                            if (firstPlayerScore > secondPlayerScore) {
+
+                                winMessage =" "+firstPlayerPoint+" PUAN İLE OYUNCU 1 KAZANDI!!"+"\n Oyuncu 2 puanı: "+secondPlayerPoint
+
+                            } else {
+
+                                winMessage =" "+secondPlayerPoint+" PUAN İLE OYUNCU 2 KAZANDI!!"+"\n Oyuncu 1 puanı: "+firstPlayerPoint
+                            }
+
+
+                            val builder = AlertDialog.Builder(this)
+                            builder.setMessage(winMessage)
+                                .setPositiveButton("Geri Dön",
+                                    DialogInterface.OnClickListener { dialog, id ->
+
+
+                                        val intent = Intent(this, FeedActivity::class.java)
+                                        intent.putExtra("email",email)
+                                        startActivity(intent)
+
+                                    })
+
+                            // Create the AlertDialog object and return it
+                            builder.create()
+                            builder.show()
+
+                        }
+
+                    } else {
+                        if (isFirstPlayerTurn) {
+
+                            //FirstPlayer lose condition
+
+                            if(valueOfFirstCard.houseName == valueOfSecondCard.houseName){
+
+                                var negativePoint =(valueOfFirstCard.wizardPoint!!+ valueOfSecondCard.wizardPoint!!)/valueOfFirstCard.housePoint!!
+                                firstPlayerPoint -= negativePoint
+                                firstPlayerScoreTextView.text = firstPlayerPoint.toString()
+
+                            }else{
+                                var averagePoint = (valueOfFirstCard.wizardPoint!!+valueOfSecondCard.wizardPoint!!)/2
+                                var negativePoint = averagePoint*valueOfFirstCard.housePoint!!*valueOfSecondCard.housePoint!!
+                                firstPlayerPoint-=negativePoint
+                                firstPlayerScoreTextView.text = firstPlayerPoint.toString()
+                            }
+
+                            isFirstPlayerTurn = false;
+                            isSecondPlayerTurn = true;
+                            secondPlayerTextView.visibility = View.VISIBLE
+                            firstPlayerTextView.visibility = View.INVISIBLE
+
+
+                        } else {
+
+                            //SecondPlayer lose condition
+                            if(valueOfFirstCard.houseName == valueOfSecondCard.houseName){
+
+                                var negativePoint =(valueOfFirstCard.wizardPoint!!+ valueOfSecondCard.wizardPoint!!)/valueOfFirstCard.housePoint!!
+                                secondPlayerPoint -= negativePoint
+                                secondPlayerScoreTextView.text = secondPlayerPoint.toString()
+
+                            }else{
+                                var averagePoint = (valueOfFirstCard.wizardPoint!!+valueOfSecondCard.wizardPoint!!)/2
+                                var negativePoint = averagePoint*valueOfFirstCard.housePoint!!*valueOfSecondCard.housePoint!!
+                                secondPlayerPoint-=negativePoint
+                                secondPlayerScoreTextView.text = secondPlayerPoint.toString()
+                            }
+
+
+                            isFirstPlayerTurn = true;
+                            isSecondPlayerTurn = false;
+                            firstPlayerTextView.visibility = View.VISIBLE
+                            secondPlayerTextView.visibility = View.INVISIBLE
+
+                        }
+                        //DONT MATCH RESET THE GAME
+                        //Delay ekle
+                        val handler = Handler()
+                        handler.postDelayed(
+                            Runnable { ResetGame(imageViewList) },
+                            500
+                        )
+
+
+                    }
+
+                } else if (!isOneCardFlipped && !isTwoCardsFlipped) {
+
+                    //Hiç bir kart tıklanmmaışsa
+
+                    firstCard = imageView
+                    val valueOfElement = hashMap.getValue(imageView)
+                    valueOfElement.isFlipped = true
+                    imageView.setImageBitmap(ReturnBitmap(valueOfElement.photoStringBase64!!))
+                    isOneCardFlipped = true
+
+                }
+
+            }
+
+        }
+
+
+
+
+
+
+    }//OnCreate ENDS!!
+    override fun onStart() {
+        super.onStart()
+
+        val timer = object: CountDownTimer(61000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+
+                timeTextView.text = ""+ millisUntilFinished/1000
+
+
+            }
+
+            override fun onFinish() {
+
+                /* val builder = AlertDialog.Builder(applicationContext)
+                 builder.setMessage("You lose, time is up!")
+                     .setPositiveButton("Go back",
+                         DialogInterface.OnClickListener { dialog, id ->
+
+
+
+                             val intent = Intent(applicationContext, FeedActivity::class.java)
+                             startActivity(intent)
+
+                         })
+
+                 // Create the AlertDialog object and return it
+                 builder.create()
+                 builder.show()*/
+
+
+                if(isInGame){
+
+                    if(firstPlayerPoint>secondPlayerPoint){
+                        Toast.makeText(applicationContext,"Süreniz bitti, "+firstPlayerPoint+" puan ile BİRİNCİ oyuncu kazandı", Toast.LENGTH_LONG).show()
+                    }else{
+                        Toast.makeText(applicationContext,"Süreniz bitti, "+secondPlayerPoint+" puan ile İKİNCİ oyuncu kazandı", Toast.LENGTH_LONG).show()
+                    }
+
+
+
+                    val intent = Intent(applicationContext, FeedActivity::class.java)
+                    intent.putExtra("email",email)
+                    startActivity(intent)
+                    mediaPlayer1.start()
+                    finish()
+                    mediaPLayer.stop()
+                }
+
+            }
+        }
+        timer.start()
+    }
+
+
+    fun ResetGame(imageViewList: List<ImageView>) {
+
+
+        for (imageView in imageViewList) {
+
+
+            imageView.setImageResource(R.drawable.arkason)
+            firstCard = null
+            secondCard = null
+            isTwoCardsFlipped = false
+            isOneCardFlipped = false
+
+        }
+    }
+
+    fun ReturnBitmap(base64String: String): Bitmap {
+
+        val imageBytes = Base64.decode(base64String, Base64.DEFAULT)
+        val decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+        return decodedImage
+    }
+
+
+    fun InitMemoryCard(houseName: String, wizardName: String, memoryCard: MemoryCardData) {
+
+
+        val db = FirebaseFirestore.getInstance()
+        val docRef = db.collection(houseName).document(wizardName)
+
+        docRef.get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+
+                    if(document.data == null){
+                        Log.e("bosbos","DATA IS NULLLLLLLLLLLLLL!!!!!!!!!!!!!")
+                    }
+
+
+
+                    val houseName = document.data!!["ev"].toString()
+                    val wizardPoint = document.data!!["puan"] as Long
+                    val housePoint = document.data!!["evpuanı"] as Long
+                    val photoBase64 = document.data!!["foto"].toString()
+                    memoryCard.isFlipped = false
+                    memoryCard.isMatched = false
+                    memoryCard.houseName = houseName
+                    memoryCard.wizardPoint = wizardPoint
+                    memoryCard.photoStringBase64 = photoBase64
+                    memoryCard.housePoint = housePoint
+
+                } else {
+                    Log.d("TAG", "No such document")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d("TAG", "get failed with ", exception)
+            }
+    }
+
+
+
+
+
+
+
+
+
+}package com.example.harrypottergame
+
+import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.media.MediaPlayer
+import android.os.Bundle
+import android.os.CountDownTimer
+import android.os.Handler
+import android.util.Base64
+import android.util.Log
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.firestore.FirebaseFirestore
+import java.io.FileOutputStream
+import java.io.FileWriter
+
+
+class FourFourActivity : AppCompatActivity() {
+    private lateinit var image1 : ImageView
+    private lateinit var image2 : ImageView
+    private lateinit var image3 : ImageView
+    private lateinit var image4 : ImageView
+    private lateinit var image5 : ImageView
+    private lateinit var image6 : ImageView
+    private lateinit var image7 : ImageView
+    private lateinit var image8 : ImageView
+    private lateinit var image9 : ImageView
+    private lateinit var image10 : ImageView
+    private lateinit var image11 : ImageView
+    private lateinit var image12 : ImageView
+    private lateinit var image13 : ImageView
+    private lateinit var image14 : ImageView
+    private lateinit var image15 : ImageView
+    private lateinit var image16 : ImageView
+
+    private lateinit var  timeText : TextView
+    private lateinit var  playerPointTextView : TextView
+    var isOneCardFlipped :Boolean = false
+    var isTwoCardsFlipped :Boolean = false
+    var isInGame :Boolean = true
+    private  var firstCard : ImageView? = null
+    private  var secondCard : ImageView? = null
+    private var score =0;
+    private var remainingTime :Float =0F
+    private var pastTime :Float =0F
+    private var playerPoint :Long =0
+
+    private lateinit var mediaPLayer : MediaPlayer
+    private lateinit var mediaPlayer1 : MediaPlayer
+    private lateinit var mediaPlayer2 : MediaPlayer
+    private lateinit var mediaPlayer3 : MediaPlayer
+    var email = String()
+
+    var memoryCardDataListg = mutableListOf<MemoryCardData>()
+    var memoryCardDataLists = mutableListOf<MemoryCardData>()
+    var memoryCardDataListh = mutableListOf<MemoryCardData>()
+    var memoryCardDataListr = mutableListOf<MemoryCardData>()
+
+    var tempListg = mutableListOf<MemoryCardData>()
+    var tempLists = mutableListOf<MemoryCardData>()
+    var tempListh = mutableListOf<MemoryCardData>()
+    var tempListr = mutableListOf<MemoryCardData>()
+
+    var allTempList = mutableListOf<MemoryCardData>()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_four_four)
+        email = intent.getStringExtra("email")!!
+        var hashMap:HashMap<ImageView,MemoryCardData> = HashMap<ImageView,MemoryCardData>()
+        var imageViewList = mutableListOf<ImageView>()
+/*        var memoryCardDataListg = mutableListOf<MemoryCardData>()
+        var memoryCardDataList1 = mutableListOf<MemoryCardData>()
+        var memoryCardDataList2 = mutableListOf<MemoryCardData>()
+        var memoryCardDataList3 = mutableListOf<MemoryCardData>()*/
+
+
+
+        if(!this::mediaPLayer.isInitialized){
+            mediaPLayer = MediaPlayer.create(this, R.raw.prologue)
+            mediaPLayer.start()
+
+        }
+        if(!this::mediaPlayer1.isInitialized){
+            mediaPlayer1 = MediaPlayer.create(this, R.raw.shocked)
+
+
+        }
+        if(!this::mediaPlayer2.isInitialized){
+            mediaPlayer2 = MediaPlayer.create(this, R.raw.congratulations)
+
+
+        }
+        if(!this::mediaPlayer3.isInitialized){
+            mediaPlayer3 = MediaPlayer.create(this, R.raw.dogrukart)
+
+
+        }
+
+
+
+
+        image1 = findViewById<ImageView>(R.id.imageView400)
+        image2 = findViewById<ImageView>(R.id.imageView401)
+        image3 = findViewById<ImageView>(R.id.imageView402)
+        image4 = findViewById<ImageView>(R.id.imageView403)
+        image5 = findViewById<ImageView>(R.id.imageView404)
+        image6 = findViewById<ImageView>(R.id.imageView405)
+        image7 = findViewById<ImageView>(R.id.imageView406)
+        image8 = findViewById<ImageView>(R.id.imageView407)
+        image9 = findViewById<ImageView>(R.id.imageView408)
+        image10 = findViewById<ImageView>(R.id.imageView409)
+        image11 = findViewById<ImageView>(R.id.imageView410)
+        image12 = findViewById<ImageView>(R.id.imageView411)
+        image13 = findViewById<ImageView>(R.id.imageView412)
+        image14 = findViewById<ImageView>(R.id.imageView413)
+        image15 = findViewById<ImageView>(R.id.imageView414)
+        image16 = findViewById<ImageView>(R.id.imageView415)
+        timeText = findViewById<TextView>(R.id.timeTextView4)
+        playerPointTextView = findViewById<TextView>(R.id.playerPointTextView4)
+
+
+        var MemoryCardData1 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData2 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData3 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData4 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData5 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData6 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData7 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData8 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData9 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData10 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData11 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData12 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData13 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData14 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData15 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData16 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData17 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData18 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData19 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData20 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData21 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData22 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData23 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData24 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData25 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData26 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData27 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData28 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData29 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData30 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData31 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData32 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData33 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData34 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData35 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData36 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData37 = MemoryCardData(null, null, null, null, null, null)
+
+
+
+
+
+        memoryCardDataListg.add(MemoryCardData1)
+        memoryCardDataListg.add(MemoryCardData2)
+        memoryCardDataListg.add(MemoryCardData3)
+        memoryCardDataListg.add(MemoryCardData4)
+        memoryCardDataListg.add(MemoryCardData5)
+        memoryCardDataListg.add(MemoryCardData6)
+        memoryCardDataListg.add(MemoryCardData7)
+        memoryCardDataListg.add(MemoryCardData8)
+        memoryCardDataListg.add(MemoryCardData9)
+        memoryCardDataListg.add(MemoryCardData10)
+
+
+        memoryCardDataLists.add(MemoryCardData11)
+        memoryCardDataLists.add(MemoryCardData12)
+        memoryCardDataLists.add(MemoryCardData13)
+        memoryCardDataLists.add(MemoryCardData14)
+        memoryCardDataLists.add(MemoryCardData15)
+        memoryCardDataLists.add(MemoryCardData16)
+        memoryCardDataLists.add(MemoryCardData17)
+        memoryCardDataLists.add(MemoryCardData18)
+        memoryCardDataLists.add(MemoryCardData19)
+        memoryCardDataLists.add(MemoryCardData20)
+        memoryCardDataLists.add(MemoryCardData21)
+
+
+
+        memoryCardDataListh.add(MemoryCardData22)
+        memoryCardDataListh.add(MemoryCardData23)
+        memoryCardDataListh.add(MemoryCardData24)
+        memoryCardDataListh.add(MemoryCardData25)
+        memoryCardDataListh.add(MemoryCardData26)
+        memoryCardDataListh.add(MemoryCardData27)
+        memoryCardDataListh.add(MemoryCardData28)
+        memoryCardDataListh.add(MemoryCardData29)
+        memoryCardDataListh.add(MemoryCardData30)
+
+
+
+        memoryCardDataListr.add(MemoryCardData31)
+        memoryCardDataListr.add(MemoryCardData32)
+        memoryCardDataListr.add(MemoryCardData33)
+        memoryCardDataListr.add(MemoryCardData34)
+        memoryCardDataListr.add(MemoryCardData35)
+        memoryCardDataListr.add(MemoryCardData36)
+        memoryCardDataListr.add(MemoryCardData37)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        InitMemoryCard("gryffindor", "AlbusDumbledore",MemoryCardData1)
+        InitMemoryCard("gryffindor", "ArthurWeasley", MemoryCardData2)
+        InitMemoryCard("gryffindor", "HarryPotter", MemoryCardData3)
+        InitMemoryCard("gryffindor", "HermioneGranger", MemoryCardData4)
+        InitMemoryCard("gryffindor", "LilyPotter", MemoryCardData5)
+        InitMemoryCard("gryffindor", "MinervaMcGonagall", MemoryCardData6)
+        InitMemoryCard("gryffindor", "PeterPettigrew", MemoryCardData7)
+        InitMemoryCard("gryffindor", "RemusLupin", MemoryCardData8)
+        InitMemoryCard("gryffindor", "RubeusHagrid", MemoryCardData9)
+        InitMemoryCard("gryffindor", "SiriusBlack", MemoryCardData10)
+
+
+
+
+        InitMemoryCard("slytherin", "AndromedaTonks", MemoryCardData11)
+        InitMemoryCard("slytherin", "BellatrixLestrange", MemoryCardData12)
+        InitMemoryCard("slytherin", "DoloresUmbridge", MemoryCardData13)
+        InitMemoryCard("slytherin", "DracoMalfoy", MemoryCardData14)
+        InitMemoryCard("slytherin", "EvanRosier", MemoryCardData15)
+        InitMemoryCard("slytherin", "HoraceSlughorn", MemoryCardData16)
+        InitMemoryCard("slytherin", "LetaLestrange", MemoryCardData17)
+        InitMemoryCard("slytherin", "LuciusMalfoy", MemoryCardData18)
+        InitMemoryCard("slytherin", "NarcissaMalfoy", MemoryCardData19)
+        InitMemoryCard("slytherin", "SeverusSnape", MemoryCardData20)
+        InitMemoryCard("slytherin", "TomRiddle", MemoryCardData21)
+
+
+
+
+        InitMemoryCard("hufflepuff", "CedricDiggory",MemoryCardData22)
+        InitMemoryCard("hufflepuff", "ErnestMacmillan", MemoryCardData23)
+        InitMemoryCard("hufflepuff", "FatFriar", MemoryCardData24)
+        InitMemoryCard("hufflepuff", "HannahAbbott", MemoryCardData25)
+        InitMemoryCard("hufflepuff", "HelgaHufflepuff", MemoryCardData26)
+        InitMemoryCard("hufflepuff", "NymphadoraTonks", MemoryCardData27)
+        InitMemoryCard("hufflepuff", "PomonaSprout", MemoryCardData28)
+        InitMemoryCard("hufflepuff", "SilvanusKettleburn", MemoryCardData29)
+        InitMemoryCard("hufflepuff", "TedLupin", MemoryCardData30)
+
+
+
+        InitMemoryCard("ravenclaw", "FiliusFlitwick",MemoryCardData31)
+        InitMemoryCard("ravenclaw", "GarrickOllivander", MemoryCardData32)
+        InitMemoryCard("ravenclaw", "MarcusBelby", MemoryCardData33)
+        InitMemoryCard("ravenclaw", "MyrtleWarren", MemoryCardData34)
+        InitMemoryCard("ravenclaw", "PadmaPatil", MemoryCardData35)
+        InitMemoryCard("ravenclaw", "QuirinusQuirrell", MemoryCardData36)
+        InitMemoryCard("ravenclaw", "RowenaRavenclaw", MemoryCardData37)
+
+
+
+
+        memoryCardDataListg.shuffle()
+        memoryCardDataLists.shuffle()
+        memoryCardDataListh.shuffle()
+        memoryCardDataListr.shuffle()
+
+        tempListg = memoryCardDataListg.take(2) as MutableList<MemoryCardData>
+        tempLists = memoryCardDataLists.take(2) as MutableList<MemoryCardData>
+        tempListh = memoryCardDataListh.take(2) as MutableList<MemoryCardData>
+        tempListr = memoryCardDataListr.take(2) as MutableList<MemoryCardData>
+
+
+        tempListg.addAll(tempListg)
+        tempLists.addAll(tempLists)
+        tempListh.addAll(tempListh)
+        tempListr.addAll(tempListr)
+
+
+        allTempList.addAll(tempLists)
+        allTempList.addAll(tempListg)
+        allTempList.addAll(tempListh)
+        allTempList.addAll(tempListr)
+
+        allTempList.shuffle()
+
+
+
+        /*val filename ="deneme.txt"
+        val myfile =File(filename)
+        myfile.writeText(allTempList.toString())*/
+
+
+     /*   var fo =FileWriter("C:\\Users\\Mehmet Ali\\Desktop\\deneme1.txt")
+        fo.write(allTempList.toString())
+        fo.close()*/
+
+      /*  val FILENAME = "dosyadeneme"
+
+        val fos: FileOutputStream = openFileOutput(FILENAME, MODE_PRIVATE)
+        fos.write(allTempList.toString().toByteArray())
+        fos.close()*/
+
+
+
+
+
+
+
+
+
+
+
+
+        imageViewList.add(image1)
+        imageViewList.add(image2)
+        imageViewList.add(image3)
+        imageViewList.add(image4)
+        imageViewList.add(image5)
+        imageViewList.add(image6)
+        imageViewList.add(image7)
+        imageViewList.add(image8)
+        imageViewList.add(image9)
+        imageViewList.add(image10)
+        imageViewList.add(image11)
+        imageViewList.add(image12)
+        imageViewList.add(image13)
+        imageViewList.add(image14)
+        imageViewList.add(image15)
+        imageViewList.add(image16)
+
+
+
+        hashMap.put(image1,allTempList[0])
+        hashMap.put(image2,allTempList[1])
+        hashMap.put(image3,allTempList[2])
+        hashMap.put(image4,allTempList[3])
+        hashMap.put(image5,allTempList[4])
+        hashMap.put(image6,allTempList[5])
+        hashMap.put(image7,allTempList[6])
+        hashMap.put(image8,allTempList[7])
+        hashMap.put(image9,allTempList[8])
+        hashMap.put(image10,allTempList[9])
+        hashMap.put(image11,allTempList[10])
+        hashMap.put(image12,allTempList[11])
+        hashMap.put(image13,allTempList[12])
+        hashMap.put(image14,allTempList[13])
+        hashMap.put(image15,allTempList[14])
+        hashMap.put(image16,allTempList[15])
+
+
+
+
+        for (imageView in imageViewList) {
+
+            imageView.setOnClickListener{
+
+                if(isOneCardFlipped){
+
+                    val valueOfElement = hashMap.getValue(imageView)
+                    valueOfElement.isFlipped = true
+                    isTwoCardsFlipped = true
+                    imageView.setImageBitmap(ReturnBitmap(valueOfElement.photoStringBase64!!))
+                    secondCard = imageView
+                    var valueOfFirstCard = hashMap.getValue(firstCard!!)
+                    var valueOfSecondCard = hashMap.getValue(secondCard!!)
+
+                    if(valueOfFirstCard.photoStringBase64 == valueOfSecondCard.photoStringBase64){
+                        mediaPlayer3.start()
+                        //match olduysa
+
+                        var addPoint = (2*valueOfFirstCard.wizardPoint!!*valueOfFirstCard.housePoint!!)*(remainingTime/10)
+                        //Toast.makeText(applicationContext,remainingTime.toString(),Toast.LENGTH_LONG).show()
+                        playerPoint += addPoint.toLong()
+                        playerPointTextView.text = playerPoint.toString()
+
+
+
+                        firstCard!!.setOnClickListener(null)
+                        secondCard!!.setOnClickListener(null)
+                        imageViewList.remove(firstCard)
+                        imageViewList.remove(secondCard)
+                        firstCard = null
+                        secondCard = null
+                        isOneCardFlipped = false
+                        isTwoCardsFlipped= false
+                        score +=1;
+                        if(score ==8){
+                            mediaPLayer.stop()
+                            mediaPlayer2.start()
+                            isInGame = false
+                            Toast.makeText(this,""+playerPoint+ " Puan ile oyunu BİTİRDİNİZ!!!"  ,
+                                Toast.LENGTH_LONG).show()
+                            val intent = Intent(this, FeedActivity::class.java)
+                            intent.putExtra("email",email)
+                            startActivity(intent)
+                        }
+
+
+                    }else{
+                        //DONT MATCH RESET THE GAME
+                        //Delay ekle
+
+                        if(valueOfFirstCard.houseName == valueOfSecondCard.houseName){
+
+                            var totalPointsOfCards = valueOfFirstCard.wizardPoint!!+valueOfSecondCard.wizardPoint!!
+                            var negativePoint = (totalPointsOfCards/valueOfFirstCard.housePoint!!) *(pastTime/10)
+                            Log.i("time",pastTime.toString())
+
+                            playerPoint -=negativePoint.toLong()
+                            playerPointTextView.text = playerPoint.toString()
+
+                        }else{
+
+                            var averagePoint = (valueOfFirstCard.wizardPoint!!+valueOfSecondCard.wizardPoint!!)/2
+                            var negativePoint = (averagePoint*valueOfFirstCard.housePoint!!*valueOfSecondCard.housePoint!!)*(pastTime/10)
+
+                            Log.i("time",pastTime.toString())
+                            playerPoint -=negativePoint.toLong()
+                            playerPointTextView.text = playerPoint.toString()
+                        }
+
+
+
+
+
+                        val handler = Handler()
+                        handler.postDelayed(
+                            Runnable {  ResetGame(imageViewList)  },
+                            500
+                        )
+
+
+                    }
+
+                }else if ( !isOneCardFlipped && !isTwoCardsFlipped){
+                    firstCard = imageView
+                    val valueOfElement = hashMap.getValue(imageView)
+                    valueOfElement.isFlipped = true
+                    imageView.setImageBitmap(ReturnBitmap(valueOfElement.photoStringBase64!!))
+                    isOneCardFlipped = true
+
+
+                }
+
+            }
+
+        }
+
+    }
+    override fun onStart() {
+        super.onStart()
+
+        val timer = object: CountDownTimer(46000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+
+                pastTime = 46000F/1000F - millisUntilFinished/1000F
+                remainingTime = millisUntilFinished/1000F
+
+                timeText.text = ""+  remainingTime
+
+
+
+
+            }
+
+            override fun onFinish() {
+
+                /* val builder = AlertDialog.Builder(applicationContext)
+                 builder.setMessage("You lose, time is up!")
+                     .setPositiveButton("Go back",
+                         DialogInterface.OnClickListener { dialog, id ->
+
+
+
+                             val intent = Intent(applicationContext, FeedActivity::class.java)
+                             startActivity(intent)
+
+                         })
+
+                 // Create the AlertDialog object and return it
+                 builder.create()
+                 builder.show()*/
+
+
+                if(isInGame){
+                    Toast.makeText(applicationContext,"Süre Bitti!",Toast.LENGTH_LONG).show()
+                    val intent = Intent(applicationContext, FeedActivity::class.java)
+                    intent.putExtra("email",email)
+                    startActivity(intent)
+                    mediaPlayer1.start()
+                    finish()
+                    mediaPLayer.stop()
+                }
+
+            }
+        }
+        timer.start()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        isInGame=true
+
+    }
+
+    fun ResetGame(imageViewList : List<ImageView>){
+
+
+
+        for(imageView in imageViewList){
+
+
+            imageView.setImageResource(R.drawable.arkason)
+            firstCard = null
+            secondCard = null
+            isTwoCardsFlipped = false
+            isOneCardFlipped = false
+
+        }
+    }
+
+    fun InitMemoryCard(houseName: String, wizardName: String, memoryCard: MemoryCardData) {
+
+
+        val db = FirebaseFirestore.getInstance()
+        val docRef = db.collection(houseName).document(wizardName)
+
+        docRef.get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+
+                    if(document.data == null){
+                        Log.e("bosbos","DATA IS NULLLLLLLLLLLLLL!!!!!!!!!!!!!")
+                    }
+
+
+
+                    val houseName = document.data!!["ev"].toString()
+                    val wizardPoint = document.data!!["puan"] as Long
+                    val housePoint = document.data!!["evpuanı"] as Long
+                    val photoBase64 = document.data!!["foto"].toString()
+                    memoryCard.isFlipped = false
+                    memoryCard.isMatched = false
+                    memoryCard.houseName = houseName
+                    memoryCard.wizardPoint = wizardPoint
+                    memoryCard.photoStringBase64 = photoBase64
+                    memoryCard.housePoint = housePoint
+
+
+
+
+                } else {
+                    Log.d("TAG", "No such document")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d("TAG", "get failed with ", exception)
+            }
+    }
+
+    fun ReturnBitmap(base64String: String): Bitmap {
+
+        val imageBytes = Base64.decode(base64String, Base64.DEFAULT)
+        val decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+        return decodedImage
+    }
+}package com.example.harrypottergame
+
+import android.content.Intent
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.renderscript.ScriptGroup.Binding
+import android.util.Log
+import android.view.View
+import android.widget.TextView
+import android.widget.Toast
+import com.example.harrypottergame.databinding.ActivityMainBinding
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.database
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
+import kotlin.math.log
+
+class MainActivity : AppCompatActivity() {
+    private lateinit var auth : FirebaseAuth
+    private lateinit var binding : ActivityMainBinding
+    private lateinit var database : DatabaseReference
+    private lateinit var email : String
+    lateinit var usernameText: TextView
+
+
+
+
+
+
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+        auth = Firebase.auth
+       database = FirebaseDatabase.getInstance("https://harrypottermemorycardgame-default-rtdb.europe-west1.firebasedatabase.app" ).getReference("Users")
+
+
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+    }
+
+    fun cheatButtonClicked (view : View){
+        val intent = Intent(this,FeedActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+
+     fun SignInClicked(view : View){
+         email = binding.emailText.text.toString().trim()
+         val password = binding.passwordText.text.toString().trim()
+         val email3 = email.replace(".","")
+
+         //var email2 = database.child(userName).child(email).key
+         //Log.i("mail", "Got value $email2")
+         //email2 = email2 + ".com"
+         if(email.isEmpty() || password.isEmpty())
+         {
+             Toast.makeText(this,"Email ve şifre boş olamaz",Toast.LENGTH_LONG).show()
+         }
+         else
+         {
+             auth.signInWithEmailAndPassword(email, password).addOnSuccessListener {
+
+
+                 val intent = Intent(this,FeedActivity::class.java)
+                 intent.putExtra("email",email3)
+                 val intent2 = Intent(this,FourFourActivity::class.java)
+                 intent.putExtra("email",email3)
+                 startActivity(intent)
+                 finish()
+
+             }.addOnFailureListener{
+                 Toast.makeText(this,it.localizedMessage,Toast.LENGTH_LONG).show()
+             }
+
+
+
+         }
+
+
+
+
+
+
+
+    }
+
+    fun passforgotOnClick(view: View){
+        binding.passwordText.visibility = View.INVISIBLE
+        binding.loginButton.visibility = View.INVISIBLE
+        binding.passwordRecovery.visibility = View.VISIBLE
+
+    }
+
+    fun recoveryClicked(view: View){
+       val email = binding.emailText.text.toString().trim()
+        if(email.isEmpty()){
+            Toast.makeText(this,"Email giriniz!",Toast.LENGTH_LONG).show()
+        }
+        else{
+            Firebase.auth.sendPasswordResetEmail(email)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Log.d("TAG", "Email sent.")
+                        val intent = Intent(this,MainActivity::class.java)
+                        startActivity(intent)
+                        finish()
+
+                    }
+                    else{
+                        Toast.makeText(this,"Email sistemde kayıtlı değil !",Toast.LENGTH_LONG).show()
+                    }
+                }
+        }
+    }
+
+    fun dontHaveAccTextClicked (view: View){
+        binding.loginButton.visibility = View.INVISIBLE
+        binding.registerButton.visibility = View.VISIBLE
+        binding.emailText.visibility = View.VISIBLE
+        binding.dontHaveAccText.visibility = View.INVISIBLE
+        binding.textView2.visibility = View.INVISIBLE
+        binding.forgotPassText.visibility = View.INVISIBLE
+        binding.userNameText.visibility = View.VISIBLE
+
+    }
+
+
+
+    fun RegisterClicked(view: View){
+
+        email = binding.emailText.text.toString().trim()
+        val password = binding.passwordText.text.toString().trim()
+        val username = binding.userNameText.text.toString().trim()
+
+        val user = User(username)
+
+        val email2 = email.replace("." , "")
+
+
+        database.child(email2).setValue(user)
+
+
+
+
+        if(email.isEmpty() || password.isEmpty() )
+        {
+            Toast.makeText(this,"Tüm alanlar doldurulmalıdır!",Toast.LENGTH_LONG).show()
+        }
+        else
+        {
+            auth.createUserWithEmailAndPassword(email,password).addOnSuccessListener {
+
+
+                val intent = Intent(this,FeedActivity::class.java)
+                intent.putExtra("email",email2)
+                startActivity(intent)
+                finish()
+
+            }.addOnFailureListener{
+                Toast.makeText(this,it.localizedMessage,Toast.LENGTH_LONG).show()
+            }
+
+        }
+
+
+
+    }
+
+    }
+package com.example.harrypottergame
+
+import android.graphics.drawable.Drawable
+
+data class MemoryCardData(var isFlipped :Boolean? = false,var isMatched : Boolean? = false,var photoStringBase64 : String?,var houseName:String?,var housePoint:Long?,var wizardPoint:Long?)
+//,var house:String?,var point:Int?
+
+package com.example.harrypottergame
+
+import android.content.DialogInterface
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.media.MediaPlayer
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.os.CountDownTimer
+import android.os.Handler
+import android.util.Base64
+import android.util.Log
+import android.view.View
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import com.google.firebase.firestore.FirebaseFirestore
+
+class SixSix_2Activity : AppCompatActivity() {
+    private lateinit var image1 : ImageView
+    private lateinit var image2 : ImageView
+    private lateinit var image3 : ImageView
+    private lateinit var image4 : ImageView
+    private lateinit var image5 : ImageView
+    private lateinit var image6 : ImageView
+    private lateinit var image7 : ImageView
+    private lateinit var image8 : ImageView
+    private lateinit var image9 : ImageView
+    private lateinit var image10 : ImageView
+    private lateinit var image11 : ImageView
+    private lateinit var image12 : ImageView
+    private lateinit var image13 : ImageView
+    private lateinit var image14 : ImageView
+    private lateinit var image15 : ImageView
+    private lateinit var image16 : ImageView
+    private lateinit var image17 : ImageView
+    private lateinit var image18 : ImageView
+    private lateinit var image19 : ImageView
+    private lateinit var image20 : ImageView
+    private lateinit var image21 : ImageView
+    private lateinit var image22 : ImageView
+    private lateinit var image23 : ImageView
+    private lateinit var image24 : ImageView
+    private lateinit var image25 : ImageView
+    private lateinit var image26 : ImageView
+    private lateinit var image27 : ImageView
+    private lateinit var image28 : ImageView
+    private lateinit var image29 : ImageView
+    private lateinit var image30 : ImageView
+    private lateinit var image31 : ImageView
+    private lateinit var image32 : ImageView
+    private lateinit var image33 : ImageView
+    private lateinit var image34 : ImageView
+    private lateinit var image35 : ImageView
+    private lateinit var image36 : ImageView
+
+    private lateinit var testImage: ImageView
+    private lateinit var firstPlayerTextView: TextView
+    private lateinit var secondPlayerTextView: TextView
+    private lateinit var secondPlayerScoreTextView: TextView
+    private lateinit var firstPlayerScoreTextView: TextView
+    private lateinit var timeTextView: TextView
+
+    var isOneCardFlipped: Boolean = false
+    var isTwoCardsFlipped: Boolean = false
+    private var firstCard: ImageView? = null
+    private var secondCard: ImageView? = null
+    private var isFirstPlayerTurn: Boolean = true
+    private var isSecondPlayerTurn: Boolean = false
+    private var isInGame : Boolean = true;
+    private var firstPlayerScore = 0;
+    private var secondPlayerScore = 0;
+    private var firstPlayerPoint :Long =0
+    private var secondPlayerPoint:Long = 0
+
+    private var winMessage = ""
+
+    private lateinit var mediaPLayer : MediaPlayer
+    private lateinit var mediaPlayer1 : MediaPlayer
+    private lateinit var mediaPlayer2 : MediaPlayer
+    private lateinit var mediaPlayer3 : MediaPlayer
+
+
+    var email = String()
+
+    var memoryCardDataListg = mutableListOf<MemoryCardData>()
+    var memoryCardDataLists = mutableListOf<MemoryCardData>()
+    var memoryCardDataListh = mutableListOf<MemoryCardData>()
+    var memoryCardDataListr = mutableListOf<MemoryCardData>()
+
+    var tempListg = mutableListOf<MemoryCardData>()
+    var tempLists = mutableListOf<MemoryCardData>()
+    var tempListh = mutableListOf<MemoryCardData>()
+    var tempListr = mutableListOf<MemoryCardData>()
+
+    var allTempList = mutableListOf<MemoryCardData>()
+
+
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_six_six2)
+
+        email = intent.getStringExtra("email")!!
+
+        var hashMap: HashMap<ImageView, MemoryCardData> = HashMap<ImageView, MemoryCardData>()
+        var imageViewList = mutableListOf<ImageView>()
+        var memoryCardDataList = mutableListOf<MemoryCardData>()
+
+
+
+        if(!this::mediaPLayer.isInitialized){
+            mediaPLayer = MediaPlayer.create(this, R.raw.prologue)
+            mediaPLayer.start()
+
+        }
+        if(!this::mediaPlayer1.isInitialized){
+            mediaPlayer1 = MediaPlayer.create(this, R.raw.shocked)
+
+
+        }
+        if(!this::mediaPlayer2.isInitialized){
+            mediaPlayer2 = MediaPlayer.create(this, R.raw.congratulations)
+
+
+        }
+        if(!this::mediaPlayer3.isInitialized){
+            mediaPlayer3 = MediaPlayer.create(this, R.raw.dogrukart)
+
+
+        }
+
+
+
+        timeTextView = findViewById<TextView>(R.id.timeText6_2)
+
+        image1 = findViewById<ImageView>(R.id.imageView600_2)
+        image2 = findViewById<ImageView>(R.id.imageView601_2)
+        image3 = findViewById<ImageView>(R.id.imageView602_2)
+        image4 = findViewById<ImageView>(R.id.imageView603_2)
+        image5 = findViewById<ImageView>(R.id.imageView604_2)
+        image6 = findViewById<ImageView>(R.id.imageView605_2)
+        image7 = findViewById<ImageView>(R.id.imageView606_2)
+        image8 = findViewById<ImageView>(R.id.imageView607_2)
+        image9 = findViewById<ImageView>(R.id.imageView608_2)
+        image10 = findViewById<ImageView>(R.id.imageView609_2)
+        image11 = findViewById<ImageView>(R.id.imageView610_2)
+        image12 = findViewById<ImageView>(R.id.imageView611_2)
+        image13 = findViewById<ImageView>(R.id.imageView612_2)
+        image14 = findViewById<ImageView>(R.id.imageView613_2)
+        image15 = findViewById<ImageView>(R.id.imageView614_2)
+        image16 = findViewById<ImageView>(R.id.imageView615_2)
+        image17 = findViewById<ImageView>(R.id.imageView616_2)
+        image18 = findViewById<ImageView>(R.id.imageView617_2)
+        image19 = findViewById<ImageView>(R.id.imageView618_2)
+        image20 = findViewById<ImageView>(R.id.imageView619_2)
+        image21 = findViewById<ImageView>(R.id.imageView620_2)
+        image22 = findViewById<ImageView>(R.id.imageView621_2)
+        image23 = findViewById<ImageView>(R.id.imageView622_2)
+        image24 = findViewById<ImageView>(R.id.imageView623_2)
+        image25 = findViewById<ImageView>(R.id.imageView624_2)
+        image26 = findViewById<ImageView>(R.id.imageView625_2)
+        image27 = findViewById<ImageView>(R.id.imageView626_2)
+        image28 = findViewById<ImageView>(R.id.imageView627_2)
+        image29 = findViewById<ImageView>(R.id.imageView628_2)
+        image30 = findViewById<ImageView>(R.id.imageView629_2)
+        image31 = findViewById<ImageView>(R.id.imageView630_2)
+        image32 = findViewById<ImageView>(R.id.imageView631_2)
+        image33 = findViewById<ImageView>(R.id.imageView632_2)
+        image34 = findViewById<ImageView>(R.id.imageView633_2)
+        image35 = findViewById<ImageView>(R.id.imageView634_2)
+        image36 = findViewById<ImageView>(R.id.imageView635_2)
+
+        firstPlayerTextView = findViewById<TextView>(R.id.player1id_3)
+        secondPlayerTextView = findViewById<TextView>(R.id.player2id_3)
+        firstPlayerScoreTextView = findViewById<TextView>(R.id.player1scoreid_3)
+        secondPlayerScoreTextView = findViewById<TextView>(R.id.player2scoreid_3)
+
+        secondPlayerTextView.visibility = View.INVISIBLE
+
+
+
+
+
+
+        var MemoryCardData1 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData2 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData3 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData4 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData5 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData6 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData7 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData8 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData9 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData10 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData11 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData12 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData13 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData14 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData15 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData16 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData17 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData18 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData19 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData20 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData21 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData22 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData23 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData24 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData25 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData26 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData27 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData28 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData29 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData30 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData31 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData32 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData33 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData34 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData35 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData36 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData37 = MemoryCardData(null, null, null, null, null, null)
+
+
+
+
+
+        memoryCardDataListg.add(MemoryCardData1)
+        memoryCardDataListg.add(MemoryCardData2)
+        memoryCardDataListg.add(MemoryCardData3)
+        memoryCardDataListg.add(MemoryCardData4)
+        memoryCardDataListg.add(MemoryCardData5)
+        memoryCardDataListg.add(MemoryCardData6)
+        memoryCardDataListg.add(MemoryCardData7)
+        memoryCardDataListg.add(MemoryCardData8)
+        memoryCardDataListg.add(MemoryCardData9)
+        memoryCardDataListg.add(MemoryCardData10)
+
+
+        memoryCardDataLists.add(MemoryCardData11)
+        memoryCardDataLists.add(MemoryCardData12)
+        memoryCardDataLists.add(MemoryCardData13)
+        memoryCardDataLists.add(MemoryCardData14)
+        memoryCardDataLists.add(MemoryCardData15)
+        memoryCardDataLists.add(MemoryCardData16)
+        memoryCardDataLists.add(MemoryCardData17)
+        memoryCardDataLists.add(MemoryCardData18)
+        memoryCardDataLists.add(MemoryCardData19)
+        memoryCardDataLists.add(MemoryCardData20)
+        memoryCardDataLists.add(MemoryCardData21)
+
+
+
+        memoryCardDataListh.add(MemoryCardData22)
+        memoryCardDataListh.add(MemoryCardData23)
+        memoryCardDataListh.add(MemoryCardData24)
+        memoryCardDataListh.add(MemoryCardData25)
+        memoryCardDataListh.add(MemoryCardData26)
+        memoryCardDataListh.add(MemoryCardData27)
+        memoryCardDataListh.add(MemoryCardData28)
+        memoryCardDataListh.add(MemoryCardData29)
+        memoryCardDataListh.add(MemoryCardData30)
+
+
+
+        memoryCardDataListr.add(MemoryCardData31)
+        memoryCardDataListr.add(MemoryCardData32)
+        memoryCardDataListr.add(MemoryCardData33)
+        memoryCardDataListr.add(MemoryCardData34)
+        memoryCardDataListr.add(MemoryCardData35)
+        memoryCardDataListr.add(MemoryCardData36)
+        memoryCardDataListr.add(MemoryCardData37)
+
+
+
+
+
+        //huff ilk 2 si,
+        //raven ilk 3 ü
+
+        InitMemoryCard("gryffindor", "AlbusDumbledore",MemoryCardData1)
+        InitMemoryCard("gryffindor", "ArthurWeasley", MemoryCardData2)
+        InitMemoryCard("gryffindor", "HarryPotter", MemoryCardData3)
+        InitMemoryCard("gryffindor", "HermioneGranger", MemoryCardData4)
+        InitMemoryCard("gryffindor", "LilyPotter", MemoryCardData5)
+        InitMemoryCard("gryffindor", "MinervaMcGonagall", MemoryCardData6)
+        InitMemoryCard("gryffindor", "PeterPettigrew", MemoryCardData7)
+        InitMemoryCard("gryffindor", "RemusLupin", MemoryCardData8)
+        InitMemoryCard("gryffindor", "RubeusHagrid", MemoryCardData9)
+        InitMemoryCard("gryffindor", "SiriusBlack", MemoryCardData10)
+
+
+
+
+        InitMemoryCard("slytherin", "AndromedaTonks", MemoryCardData11)
+        InitMemoryCard("slytherin", "BellatrixLestrange", MemoryCardData12)
+        InitMemoryCard("slytherin", "DoloresUmbridge", MemoryCardData13)
+        InitMemoryCard("slytherin", "DracoMalfoy", MemoryCardData14)
+        InitMemoryCard("slytherin", "EvanRosier", MemoryCardData15)
+        InitMemoryCard("slytherin", "HoraceSlughorn", MemoryCardData16)
+        InitMemoryCard("slytherin", "LetaLestrange", MemoryCardData17)
+        InitMemoryCard("slytherin", "LuciusMalfoy", MemoryCardData18)
+        InitMemoryCard("slytherin", "NarcissaMalfoy", MemoryCardData19)
+        InitMemoryCard("slytherin", "SeverusSnape", MemoryCardData20)
+        InitMemoryCard("slytherin", "TomRiddle", MemoryCardData21)
+
+
+
+
+        InitMemoryCard("hufflepuff", "CedricDiggory",MemoryCardData22)
+        InitMemoryCard("hufflepuff", "ErnestMacmillan", MemoryCardData23)
+        InitMemoryCard("hufflepuff", "FatFriar", MemoryCardData24)
+        InitMemoryCard("hufflepuff", "HannahAbbott", MemoryCardData25)
+        InitMemoryCard("hufflepuff", "HelgaHufflepuff", MemoryCardData26)
+        InitMemoryCard("hufflepuff", "NymphadoraTonks", MemoryCardData27)
+        InitMemoryCard("hufflepuff", "PomonaSprout", MemoryCardData28)
+        InitMemoryCard("hufflepuff", "SilvanusKettleburn", MemoryCardData29)
+        InitMemoryCard("hufflepuff", "TedLupin", MemoryCardData30)
+
+
+
+        InitMemoryCard("ravenclaw", "FiliusFlitwick",MemoryCardData31)
+        InitMemoryCard("ravenclaw", "GarrickOllivander", MemoryCardData32)
+        InitMemoryCard("ravenclaw", "MarcusBelby", MemoryCardData33)
+        InitMemoryCard("ravenclaw", "MyrtleWarren", MemoryCardData34)
+        InitMemoryCard("ravenclaw", "PadmaPatil", MemoryCardData35)
+        InitMemoryCard("ravenclaw", "QuirinusQuirrell", MemoryCardData36)
+        InitMemoryCard("ravenclaw", "RowenaRavenclaw", MemoryCardData37)
+
+
+
+        memoryCardDataListg.shuffle()
+        memoryCardDataLists.shuffle()
+        memoryCardDataListh.shuffle()
+        memoryCardDataListr.shuffle()
+
+        tempListg = memoryCardDataListg.take(5) as MutableList<MemoryCardData>
+        tempLists = memoryCardDataLists.take(4) as MutableList<MemoryCardData>
+        tempListh = memoryCardDataListh.take(5) as MutableList<MemoryCardData>
+        tempListr = memoryCardDataListr.take(4) as MutableList<MemoryCardData>
+
+
+        tempListg.addAll(tempListg)
+        tempLists.addAll(tempLists)
+        tempListh.addAll(tempListh)
+        tempListr.addAll(tempListr)
+
+
+        allTempList.addAll(tempLists)
+        allTempList.addAll(tempListg)
+        allTempList.addAll(tempListh)
+        allTempList.addAll(tempListr)
+
+        allTempList.shuffle()
+
+
+
+
+        imageViewList.add(image1)
+        imageViewList.add(image2)
+        imageViewList.add(image3)
+        imageViewList.add(image4)
+        imageViewList.add(image5)
+        imageViewList.add(image6)
+        imageViewList.add(image7)
+        imageViewList.add(image8)
+        imageViewList.add(image9)
+        imageViewList.add(image10)
+        imageViewList.add(image11)
+        imageViewList.add(image12)
+        imageViewList.add(image13)
+        imageViewList.add(image14)
+        imageViewList.add(image15)
+        imageViewList.add(image16)
+        imageViewList.add(image17)
+        imageViewList.add(image18)
+        imageViewList.add(image19)
+        imageViewList.add(image20)
+        imageViewList.add(image21)
+        imageViewList.add(image22)
+        imageViewList.add(image23)
+        imageViewList.add(image24)
+        imageViewList.add(image25)
+        imageViewList.add(image26)
+        imageViewList.add(image27)
+        imageViewList.add(image28)
+        imageViewList.add(image29)
+        imageViewList.add(image30)
+        imageViewList.add(image31)
+        imageViewList.add(image32)
+        imageViewList.add(image33)
+        imageViewList.add(image34)
+        imageViewList.add(image35)
+        imageViewList.add(image36)
+
+
+
+
+        hashMap.put(image1,allTempList[0])
+        hashMap.put(image2,allTempList[1])
+        hashMap.put(image3,allTempList[2])
+        hashMap.put(image4,allTempList[3])
+        hashMap.put(image5,allTempList[4])
+        hashMap.put(image6,allTempList[5])
+        hashMap.put(image7,allTempList[6])
+        hashMap.put(image8,allTempList[7])
+        hashMap.put(image9,allTempList[8])
+        hashMap.put(image10,allTempList[9])
+        hashMap.put(image11,allTempList[10])
+        hashMap.put(image12,allTempList[11])
+        hashMap.put(image13,allTempList[12])
+        hashMap.put(image14,allTempList[13])
+        hashMap.put(image15,allTempList[14])
+        hashMap.put(image16,allTempList[15])
+        hashMap.put(image17,allTempList[16])
+        hashMap.put(image18,allTempList[17])
+        hashMap.put(image19,allTempList[18])
+        hashMap.put(image20,allTempList[19])
+        hashMap.put(image21,allTempList[20])
+        hashMap.put(image22,allTempList[21])
+        hashMap.put(image23,allTempList[22])
+        hashMap.put(image24,allTempList[23])
+        hashMap.put(image25,allTempList[24])
+        hashMap.put(image26,allTempList[25])
+        hashMap.put(image27,allTempList[26])
+        hashMap.put(image28,allTempList[27])
+        hashMap.put(image29,allTempList[28])
+        hashMap.put(image30,allTempList[29])
+        hashMap.put(image31,allTempList[30])
+        hashMap.put(image32,allTempList[31])
+        hashMap.put(image33,allTempList[32])
+        hashMap.put(image34,allTempList[33])
+        hashMap.put(image35,allTempList[34])
+        hashMap.put(image36,allTempList[35])
+
+
+        for (imageView in imageViewList) {
+
+            imageView.setOnClickListener {
+
+                if (isOneCardFlipped) {
+
+
+                    val valueOfElement = hashMap.getValue(imageView)
+                    valueOfElement.isFlipped = true
+                    isTwoCardsFlipped = true
+                    imageView.setImageBitmap(ReturnBitmap(valueOfElement.photoStringBase64!!))
+                    secondCard = imageView
+                    var valueOfFirstCard = hashMap.getValue(firstCard!!)
+                    var valueOfSecondCard = hashMap.getValue(secondCard!!)
+
+
+                    if (valueOfFirstCard.photoStringBase64 == valueOfSecondCard.photoStringBase64) {
+                        mediaPlayer3.start()
+                        //match olduysa
+                        firstCard!!.setOnClickListener(null)
+                        secondCard!!.setOnClickListener(null)
+                        imageViewList.remove(firstCard)
+                        imageViewList.remove(secondCard)
+                        firstCard = null
+                        secondCard = null
+                        isOneCardFlipped = false
+                        isTwoCardsFlipped = false
+
+                        if (isFirstPlayerTurn) {
+                            var correctPoint = 2* valueOfFirstCard.housePoint!! * valueOfFirstCard.wizardPoint!!
+                            firstPlayerPoint += correctPoint
+                            firstPlayerScoreTextView.text = firstPlayerPoint.toString()
+                            firstPlayerScore += 1;
+
+                        } else {
+                            var correctPoint = 2* valueOfFirstCard.housePoint!! * valueOfFirstCard.wizardPoint!!
+                            secondPlayerPoint += correctPoint
+                            secondPlayerScoreTextView.text = secondPlayerPoint.toString()
+                            secondPlayerScore += 1;
+                        }
+
+                        if (firstPlayerScore + secondPlayerScore == 18) {
+                            mediaPLayer.stop()
+                            mediaPlayer2.start()
+                            isInGame = false
+                            //BURASI!'1!!!!!!!!!!!!!!!!
+
+                            if (firstPlayerScore > secondPlayerScore) {
+
+                                winMessage =" "+firstPlayerPoint+" PUAN İLE OYUNCU 1 KAZANDI!!"+"\n Oyuncu 2 puanı: "+secondPlayerPoint
+
+                            } else {
+
+                                winMessage =" "+secondPlayerPoint+" PUAN İLE OYUNCU 2 KAZANDI!!"+"\n Oyuncu 1 puanı: "+firstPlayerPoint
+                            }
+
+
+                            val builder = AlertDialog.Builder(this)
+                            builder.setMessage(winMessage)
+                                .setPositiveButton("Geri Dön",
+                                    DialogInterface.OnClickListener { dialog, id ->
+
+
+                                        val intent = Intent(this, FeedActivity::class.java)
+                                        intent.putExtra("email",email)
+                                        startActivity(intent)
+
+                                    })
+
+                            // Create the AlertDialog object and return it
+                            builder.create()
+                            builder.show()
+
+                        }
+
+                    } else {
+                        if (isFirstPlayerTurn) {
+
+                            //FirstPlayer lose condition
+
+                            if(valueOfFirstCard.houseName == valueOfSecondCard.houseName){
+
+                                var negativePoint =(valueOfFirstCard.wizardPoint!!+ valueOfSecondCard.wizardPoint!!)/valueOfFirstCard.housePoint!!
+                                firstPlayerPoint -= negativePoint
+                                firstPlayerScoreTextView.text = firstPlayerPoint.toString()
+
+                            }else{
+                                var averagePoint = (valueOfFirstCard.wizardPoint!!+valueOfSecondCard.wizardPoint!!)/2
+                                var negativePoint = averagePoint*valueOfFirstCard.housePoint!!*valueOfSecondCard.housePoint!!
+                                firstPlayerPoint-=negativePoint
+                                firstPlayerScoreTextView.text = firstPlayerPoint.toString()
+                            }
+
+                            isFirstPlayerTurn = false;
+                            isSecondPlayerTurn = true;
+                            secondPlayerTextView.visibility = View.VISIBLE
+                            firstPlayerTextView.visibility = View.INVISIBLE
+
+
+                        } else {
+
+                            //SecondPlayer lose condition
+                            if(valueOfFirstCard.houseName == valueOfSecondCard.houseName){
+
+                                var negativePoint =(valueOfFirstCard.wizardPoint!!+ valueOfSecondCard.wizardPoint!!)/valueOfFirstCard.housePoint!!
+                                secondPlayerPoint -= negativePoint
+                                secondPlayerScoreTextView.text = secondPlayerPoint.toString()
+
+                            }else{
+                                var averagePoint = (valueOfFirstCard.wizardPoint!!+valueOfSecondCard.wizardPoint!!)/2
+                                var negativePoint = averagePoint*valueOfFirstCard.housePoint!!*valueOfSecondCard.housePoint!!
+                                secondPlayerPoint-=negativePoint
+                                secondPlayerScoreTextView.text = secondPlayerPoint.toString()
+                            }
+
+
+                            isFirstPlayerTurn = true;
+                            isSecondPlayerTurn = false;
+                            firstPlayerTextView.visibility = View.VISIBLE
+                            secondPlayerTextView.visibility = View.INVISIBLE
+
+                        }
+                        //DONT MATCH RESET THE GAME
+                        //Delay ekle
+                        val handler = Handler()
+                        handler.postDelayed(
+                            Runnable { ResetGame(imageViewList) },
+                            500
+                        )
+
+
+                    }
+
+                } else if (!isOneCardFlipped && !isTwoCardsFlipped) {
+
+                    //Hiç bir kart tıklanmmaışsa
+
+                    firstCard = imageView
+                    val valueOfElement = hashMap.getValue(imageView)
+                    valueOfElement.isFlipped = true
+                    imageView.setImageBitmap(ReturnBitmap(valueOfElement.photoStringBase64!!))
+                    isOneCardFlipped = true
+
+                }
+
+            }
+
+        }
+
+
+
+
+
+
+
+
+    }//oncreate
+    override fun onStart() {
+        super.onStart()
+
+        val timer = object: CountDownTimer(61000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+
+                timeTextView.text = ""+ millisUntilFinished/1000
+
+
+            }
+
+            override fun onFinish() {
+
+                /* val builder = AlertDialog.Builder(applicationContext)
+                 builder.setMessage("You lose, time is up!")
+                     .setPositiveButton("Go back",
+                         DialogInterface.OnClickListener { dialog, id ->
+
+
+
+                             val intent = Intent(applicationContext, FeedActivity::class.java)
+                             startActivity(intent)
+
+                         })
+
+                 // Create the AlertDialog object and return it
+                 builder.create()
+                 builder.show()*/
+
+
+                if(isInGame){
+
+                    if(firstPlayerPoint>secondPlayerPoint){
+                        Toast.makeText(applicationContext,"Süreniz bitti, "+firstPlayerPoint+" puan ile BİRİNCİ oyuncu kazandı", Toast.LENGTH_LONG).show()
+                    }else{
+                        Toast.makeText(applicationContext,"Süreniz bitti, "+secondPlayerPoint+" puan ile İKİNCİ oyuncu kazandı", Toast.LENGTH_LONG).show()
+                    }
+
+
+
+                    val intent = Intent(applicationContext, FeedActivity::class.java)
+                    intent.putExtra("email",email)
+                    startActivity(intent)
+                    mediaPlayer1.start()
+                    finish()
+                    mediaPLayer.stop()
+                }
+
+            }
+        }
+        timer.start()
+    }
+
+
+    fun ResetGame(imageViewList: List<ImageView>) {
+
+
+        for (imageView in imageViewList) {
+
+
+            imageView.setImageResource(R.drawable.arkason)
+            firstCard = null
+            secondCard = null
+            isTwoCardsFlipped = false
+            isOneCardFlipped = false
+
+        }
+    }
+
+    fun ReturnBitmap(base64String: String): Bitmap {
+
+        val imageBytes = Base64.decode(base64String, Base64.DEFAULT)
+        val decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+        return decodedImage
+    }
+
+
+    fun InitMemoryCard(houseName: String, wizardName: String, memoryCard: MemoryCardData) {
+
+
+        val db = FirebaseFirestore.getInstance()
+        val docRef = db.collection(houseName).document(wizardName)
+
+        docRef.get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+
+                    if(document.data == null){
+                        Log.e("bosbos","DATA IS NULLLLLLLLLLLLLL!!!!!!!!!!!!!")
+                    }
+
+
+
+                    val houseName = document.data!!["ev"].toString()
+                    val wizardPoint = document.data!!["puan"] as Long
+                    val housePoint = document.data!!["evpuanı"] as Long
+                    val photoBase64 = document.data!!["foto"].toString()
+                    memoryCard.isFlipped = false
+                    memoryCard.isMatched = false
+                    memoryCard.houseName = houseName
+                    memoryCard.wizardPoint = wizardPoint
+                    memoryCard.photoStringBase64 = photoBase64
+                    memoryCard.housePoint = housePoint
+
+                } else {
+                    Log.d("TAG", "No such document")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d("TAG", "get failed with ", exception)
+            }
+    }
+
+
+
+
+
+}
+
+package com.example.harrypottergame
+
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.media.MediaPlayer
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.os.CountDownTimer
+import android.os.Handler
+import android.util.Base64
+import android.util.Log
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
+import com.google.firebase.firestore.FirebaseFirestore
+
+class SixSixActivity : AppCompatActivity() {
+    private lateinit var image1 : ImageView
+    private lateinit var image2 : ImageView
+    private lateinit var image3 : ImageView
+    private lateinit var image4 : ImageView
+    private lateinit var image5 : ImageView
+    private lateinit var image6 : ImageView
+    private lateinit var image7 : ImageView
+    private lateinit var image8 : ImageView
+    private lateinit var image9 : ImageView
+    private lateinit var image10 : ImageView
+    private lateinit var image11 : ImageView
+    private lateinit var image12 : ImageView
+    private lateinit var image13 : ImageView
+    private lateinit var image14 : ImageView
+    private lateinit var image15 : ImageView
+    private lateinit var image16 : ImageView
+    private lateinit var image17 : ImageView
+    private lateinit var image18 : ImageView
+    private lateinit var image19 : ImageView
+    private lateinit var image20 : ImageView
+    private lateinit var image21 : ImageView
+    private lateinit var image22 : ImageView
+    private lateinit var image23 : ImageView
+    private lateinit var image24 : ImageView
+    private lateinit var image25 : ImageView
+    private lateinit var image26 : ImageView
+    private lateinit var image27 : ImageView
+    private lateinit var image28 : ImageView
+    private lateinit var image29 : ImageView
+    private lateinit var image30 : ImageView
+    private lateinit var image31 : ImageView
+    private lateinit var image32 : ImageView
+    private lateinit var image33 : ImageView
+    private lateinit var image34 : ImageView
+    private lateinit var image35 : ImageView
+    private lateinit var image36 : ImageView
+
+    private lateinit var  timeText : TextView
+    private lateinit var  playerPointTextView : TextView
+    var isOneCardFlipped :Boolean = false
+    var isTwoCardsFlipped :Boolean = false
+    var isInGame :Boolean = true
+    private  var firstCard : ImageView? = null
+    private  var secondCard : ImageView? = null
+    private var score =0;
+    private var remainingTime :Float =0F
+    private var pastTime :Float =0F
+    private var playerPoint :Long =0
+
+    private lateinit var mediaPLayer : MediaPlayer
+    private lateinit var mediaPlayer1 : MediaPlayer
+    private lateinit var mediaPlayer2 : MediaPlayer
+    private lateinit var mediaPlayer3 : MediaPlayer
+
+
+    var memoryCardDataListg = mutableListOf<MemoryCardData>()
+    var memoryCardDataLists = mutableListOf<MemoryCardData>()
+    var memoryCardDataListh = mutableListOf<MemoryCardData>()
+    var memoryCardDataListr = mutableListOf<MemoryCardData>()
+
+    var email = String()
+    var tempListg = mutableListOf<MemoryCardData>()
+    var tempLists = mutableListOf<MemoryCardData>()
+    var tempListh = mutableListOf<MemoryCardData>()
+    var tempListr = mutableListOf<MemoryCardData>()
+
+    var allTempList = mutableListOf<MemoryCardData>()
+
+
+
+
+
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_six_six)
+        email = intent.getStringExtra("email")!!
+        var hashMap:HashMap<ImageView,MemoryCardData> = HashMap<ImageView,MemoryCardData>()
+        var imageViewList = mutableListOf<ImageView>()
+        var memoryCardDataList = mutableListOf<MemoryCardData>()
+        var memoryCardDataList1 = mutableListOf<MemoryCardData>()
+        var memoryCardDataList2 = mutableListOf<MemoryCardData>()
+        var memoryCardDataList3 = mutableListOf<MemoryCardData>()
+
+
+
+        if(!this::mediaPLayer.isInitialized){
+            mediaPLayer = MediaPlayer.create(this, R.raw.prologue)
+            mediaPLayer.start()
+
+        }
+        if(!this::mediaPlayer1.isInitialized){
+            mediaPlayer1 = MediaPlayer.create(this, R.raw.shocked)
+
+
+        }
+        if(!this::mediaPlayer2.isInitialized){
+            mediaPlayer2 = MediaPlayer.create(this, R.raw.congratulations)
+
+
+        }
+        if(!this::mediaPlayer3.isInitialized){
+            mediaPlayer3 = MediaPlayer.create(this, R.raw.dogrukart)
+
+
+        }
+
+
+
+
+        image1 = findViewById<ImageView>(R.id.imageView600)
+        image2 = findViewById<ImageView>(R.id.imageView601)
+        image3 = findViewById<ImageView>(R.id.imageView602)
+        image4 = findViewById<ImageView>(R.id.imageView603)
+        image5 = findViewById<ImageView>(R.id.imageView604)
+        image6 = findViewById<ImageView>(R.id.imageView605)
+        image7 = findViewById<ImageView>(R.id.imageView606)
+        image8 = findViewById<ImageView>(R.id.imageView607)
+        image9 = findViewById<ImageView>(R.id.imageView608)
+        image10 = findViewById<ImageView>(R.id.imageView609)
+        image11 = findViewById<ImageView>(R.id.imageView610)
+        image12 = findViewById<ImageView>(R.id.imageView611)
+        image13 = findViewById<ImageView>(R.id.imageView612)
+        image14 = findViewById<ImageView>(R.id.imageView613)
+        image15 = findViewById<ImageView>(R.id.imageView614)
+        image16 = findViewById<ImageView>(R.id.imageView615)
+        image17 = findViewById<ImageView>(R.id.imageView616)
+        image18 = findViewById<ImageView>(R.id.imageView617)
+        image19 = findViewById<ImageView>(R.id.imageView618)
+        image20 = findViewById<ImageView>(R.id.imageView619)
+        image21 = findViewById<ImageView>(R.id.imageView620)
+        image22 = findViewById<ImageView>(R.id.imageView621)
+        image23 = findViewById<ImageView>(R.id.imageView622)
+        image24 = findViewById<ImageView>(R.id.imageView623)
+        image25 = findViewById<ImageView>(R.id.imageView624)
+        image26 = findViewById<ImageView>(R.id.imageView625)
+        image27 = findViewById<ImageView>(R.id.imageView626)
+        image28 = findViewById<ImageView>(R.id.imageView627)
+        image29 = findViewById<ImageView>(R.id.imageView628)
+        image30 = findViewById<ImageView>(R.id.imageView629)
+        image31 = findViewById<ImageView>(R.id.imageView630)
+        image32 = findViewById<ImageView>(R.id.imageView631)
+        image33 = findViewById<ImageView>(R.id.imageView632)
+        image34 = findViewById<ImageView>(R.id.imageView633)
+        image35 = findViewById<ImageView>(R.id.imageView634)
+        image36 = findViewById<ImageView>(R.id.imageView635)
+        timeText = findViewById<TextView>(R.id.timeTextView6)
+        playerPointTextView = findViewById<TextView>(R.id.playerPointTextView6)
+
+
+
+
+        var MemoryCardData1 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData2 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData3 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData4 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData5 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData6 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData7 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData8 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData9 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData10 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData11 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData12 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData13 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData14 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData15 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData16 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData17 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData18 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData19 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData20 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData21 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData22 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData23 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData24 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData25 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData26 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData27 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData28 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData29 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData30 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData31 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData32 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData33 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData34 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData35 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData36 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData37 = MemoryCardData(null, null, null, null, null, null)
+
+
+
+        memoryCardDataListg.add(MemoryCardData1)
+        memoryCardDataListg.add(MemoryCardData2)
+        memoryCardDataListg.add(MemoryCardData3)
+        memoryCardDataListg.add(MemoryCardData4)
+        memoryCardDataListg.add(MemoryCardData5)
+        memoryCardDataListg.add(MemoryCardData6)
+        memoryCardDataListg.add(MemoryCardData7)
+        memoryCardDataListg.add(MemoryCardData8)
+        memoryCardDataListg.add(MemoryCardData9)
+        memoryCardDataListg.add(MemoryCardData10)
+
+
+        memoryCardDataLists.add(MemoryCardData11)
+        memoryCardDataLists.add(MemoryCardData12)
+        memoryCardDataLists.add(MemoryCardData13)
+        memoryCardDataLists.add(MemoryCardData14)
+        memoryCardDataLists.add(MemoryCardData15)
+        memoryCardDataLists.add(MemoryCardData16)
+        memoryCardDataLists.add(MemoryCardData17)
+        memoryCardDataLists.add(MemoryCardData18)
+        memoryCardDataLists.add(MemoryCardData19)
+        memoryCardDataLists.add(MemoryCardData20)
+        memoryCardDataLists.add(MemoryCardData21)
+
+
+
+        memoryCardDataListh.add(MemoryCardData22)
+        memoryCardDataListh.add(MemoryCardData23)
+        memoryCardDataListh.add(MemoryCardData24)
+        memoryCardDataListh.add(MemoryCardData25)
+        memoryCardDataListh.add(MemoryCardData26)
+        memoryCardDataListh.add(MemoryCardData27)
+        memoryCardDataListh.add(MemoryCardData28)
+        memoryCardDataListh.add(MemoryCardData29)
+        memoryCardDataListh.add(MemoryCardData30)
+
+
+
+        memoryCardDataListr.add(MemoryCardData31)
+        memoryCardDataListr.add(MemoryCardData32)
+        memoryCardDataListr.add(MemoryCardData33)
+        memoryCardDataListr.add(MemoryCardData34)
+        memoryCardDataListr.add(MemoryCardData35)
+        memoryCardDataListr.add(MemoryCardData36)
+        memoryCardDataListr.add(MemoryCardData37)
+
+
+        //huff ilk 2 si,
+        //raven ilk 3 ü
+
+        InitMemoryCard("gryffindor", "AlbusDumbledore",MemoryCardData1)
+        InitMemoryCard("gryffindor", "ArthurWeasley", MemoryCardData2)
+        InitMemoryCard("gryffindor", "HarryPotter", MemoryCardData3)
+        InitMemoryCard("gryffindor", "HermioneGranger", MemoryCardData4)
+        InitMemoryCard("gryffindor", "LilyPotter", MemoryCardData5)
+        InitMemoryCard("gryffindor", "MinervaMcGonagall", MemoryCardData6)
+        InitMemoryCard("gryffindor", "PeterPettigrew", MemoryCardData7)
+        InitMemoryCard("gryffindor", "RemusLupin", MemoryCardData8)
+        InitMemoryCard("gryffindor", "RubeusHagrid", MemoryCardData9)
+        InitMemoryCard("gryffindor", "SiriusBlack", MemoryCardData10)
+
+
+
+
+        InitMemoryCard("slytherin", "AndromedaTonks", MemoryCardData11)
+        InitMemoryCard("slytherin", "BellatrixLestrange", MemoryCardData12)
+        InitMemoryCard("slytherin", "DoloresUmbridge", MemoryCardData13)
+        InitMemoryCard("slytherin", "DracoMalfoy", MemoryCardData14)
+        InitMemoryCard("slytherin", "EvanRosier", MemoryCardData15)
+        InitMemoryCard("slytherin", "HoraceSlughorn", MemoryCardData16)
+        InitMemoryCard("slytherin", "LetaLestrange", MemoryCardData17)
+        InitMemoryCard("slytherin", "LuciusMalfoy", MemoryCardData18)
+        InitMemoryCard("slytherin", "NarcissaMalfoy", MemoryCardData19)
+        InitMemoryCard("slytherin", "SeverusSnape", MemoryCardData20)
+        InitMemoryCard("slytherin", "TomRiddle", MemoryCardData21)
+
+
+
+
+        InitMemoryCard("hufflepuff", "CedricDiggory",MemoryCardData22)
+        InitMemoryCard("hufflepuff", "ErnestMacmillan", MemoryCardData23)
+        InitMemoryCard("hufflepuff", "FatFriar", MemoryCardData24)
+        InitMemoryCard("hufflepuff", "HannahAbbott", MemoryCardData25)
+        InitMemoryCard("hufflepuff", "HelgaHufflepuff", MemoryCardData26)
+        InitMemoryCard("hufflepuff", "NymphadoraTonks", MemoryCardData27)
+        InitMemoryCard("hufflepuff", "PomonaSprout", MemoryCardData28)
+        InitMemoryCard("hufflepuff", "SilvanusKettleburn", MemoryCardData29)
+        InitMemoryCard("hufflepuff", "TedLupin", MemoryCardData30)
+
+
+
+        InitMemoryCard("ravenclaw", "FiliusFlitwick",MemoryCardData31)
+        InitMemoryCard("ravenclaw", "GarrickOllivander", MemoryCardData32)
+        InitMemoryCard("ravenclaw", "MarcusBelby", MemoryCardData33)
+        InitMemoryCard("ravenclaw", "MyrtleWarren", MemoryCardData34)
+        InitMemoryCard("ravenclaw", "PadmaPatil", MemoryCardData35)
+        InitMemoryCard("ravenclaw", "QuirinusQuirrell", MemoryCardData36)
+        InitMemoryCard("ravenclaw", "RowenaRavenclaw", MemoryCardData37)
+
+
+
+        memoryCardDataListg.shuffle()
+        memoryCardDataLists.shuffle()
+        memoryCardDataListh.shuffle()
+        memoryCardDataListr.shuffle()
+
+        tempListg = memoryCardDataListg.take(5) as MutableList<MemoryCardData>
+        tempLists = memoryCardDataLists.take(4) as MutableList<MemoryCardData>
+        tempListh = memoryCardDataListh.take(5) as MutableList<MemoryCardData>
+        tempListr = memoryCardDataListr.take(4) as MutableList<MemoryCardData>
+
+
+        tempListg.addAll(tempListg)
+        tempLists.addAll(tempLists)
+        tempListh.addAll(tempListh)
+        tempListr.addAll(tempListr)
+
+
+        allTempList.addAll(tempLists)
+        allTempList.addAll(tempListg)
+        allTempList.addAll(tempListh)
+        allTempList.addAll(tempListr)
+
+        allTempList.shuffle()
+
+
+
+
+        imageViewList.add(image1)
+        imageViewList.add(image2)
+        imageViewList.add(image3)
+        imageViewList.add(image4)
+        imageViewList.add(image5)
+        imageViewList.add(image6)
+        imageViewList.add(image7)
+        imageViewList.add(image8)
+        imageViewList.add(image9)
+        imageViewList.add(image10)
+        imageViewList.add(image11)
+        imageViewList.add(image12)
+        imageViewList.add(image13)
+        imageViewList.add(image14)
+        imageViewList.add(image15)
+        imageViewList.add(image16)
+        imageViewList.add(image17)
+        imageViewList.add(image18)
+        imageViewList.add(image19)
+        imageViewList.add(image20)
+        imageViewList.add(image21)
+        imageViewList.add(image22)
+        imageViewList.add(image23)
+        imageViewList.add(image24)
+        imageViewList.add(image25)
+        imageViewList.add(image26)
+        imageViewList.add(image27)
+        imageViewList.add(image28)
+        imageViewList.add(image29)
+        imageViewList.add(image30)
+        imageViewList.add(image31)
+        imageViewList.add(image32)
+        imageViewList.add(image33)
+        imageViewList.add(image34)
+        imageViewList.add(image35)
+        imageViewList.add(image36)
+
+
+
+
+        hashMap.put(image1,allTempList[0])
+        hashMap.put(image2,allTempList[1])
+        hashMap.put(image3,allTempList[2])
+        hashMap.put(image4,allTempList[3])
+        hashMap.put(image5,allTempList[4])
+        hashMap.put(image6,allTempList[5])
+        hashMap.put(image7,allTempList[6])
+        hashMap.put(image8,allTempList[7])
+        hashMap.put(image9,allTempList[8])
+        hashMap.put(image10,allTempList[9])
+        hashMap.put(image11,allTempList[10])
+        hashMap.put(image12,allTempList[11])
+        hashMap.put(image13,allTempList[12])
+        hashMap.put(image14,allTempList[13])
+        hashMap.put(image15,allTempList[14])
+        hashMap.put(image16,allTempList[15])
+        hashMap.put(image17,allTempList[16])
+        hashMap.put(image18,allTempList[17])
+        hashMap.put(image19,allTempList[18])
+        hashMap.put(image20,allTempList[19])
+        hashMap.put(image21,allTempList[20])
+        hashMap.put(image22,allTempList[21])
+        hashMap.put(image23,allTempList[22])
+        hashMap.put(image24,allTempList[23])
+        hashMap.put(image25,allTempList[24])
+        hashMap.put(image26,allTempList[25])
+        hashMap.put(image27,allTempList[26])
+        hashMap.put(image28,allTempList[27])
+        hashMap.put(image29,allTempList[28])
+        hashMap.put(image30,allTempList[29])
+        hashMap.put(image31,allTempList[30])
+        hashMap.put(image32,allTempList[31])
+        hashMap.put(image33,allTempList[32])
+        hashMap.put(image34,allTempList[33])
+        hashMap.put(image35,allTempList[34])
+        hashMap.put(image36,allTempList[35])
+
+
+
+        for (imageView in imageViewList) {
+
+            imageView.setOnClickListener{
+
+                if(isOneCardFlipped){
+
+                    val valueOfElement = hashMap.getValue(imageView)
+                    valueOfElement.isFlipped = true
+                    isTwoCardsFlipped = true
+                    imageView.setImageBitmap(ReturnBitmap(valueOfElement.photoStringBase64!!))
+                    secondCard = imageView
+                    var valueOfFirstCard = hashMap.getValue(firstCard!!)
+                    var valueOfSecondCard = hashMap.getValue(secondCard!!)
+
+                    if(valueOfFirstCard.photoStringBase64 == valueOfSecondCard.photoStringBase64){
+                        mediaPlayer3.start()
+                        //match olduysa
+
+                        var addPoint = (2*valueOfFirstCard.wizardPoint!!*valueOfFirstCard.housePoint!!)*(remainingTime/10)
+                        //Toast.makeText(applicationContext,remainingTime.toString(),Toast.LENGTH_LONG).show()
+                        playerPoint += addPoint.toLong()
+                        playerPointTextView.text = playerPoint.toString()
+
+
+
+                        firstCard!!.setOnClickListener(null)
+                        secondCard!!.setOnClickListener(null)
+                        imageViewList.remove(firstCard)
+                        imageViewList.remove(secondCard)
+                        firstCard = null
+                        secondCard = null
+                        isOneCardFlipped = false
+                        isTwoCardsFlipped= false
+                        score +=1;
+                        if(score ==18){
+                            mediaPLayer.stop()
+                            mediaPlayer2.start()
+                            isInGame = false
+                            Toast.makeText(this,""+playerPoint+ " Puan ile oyunu BİTİRDİNİZ!!!"  ,
+                                Toast.LENGTH_LONG).show()
+                            val intent = Intent(this, FeedActivity::class.java)
+                            intent.putExtra("email",email)
+                            startActivity(intent)
+                        }
+
+
+                    }else{
+                        //DONT MATCH RESET THE GAME
+                        //Delay ekle
+
+                        if(valueOfFirstCard.houseName == valueOfSecondCard.houseName){
+
+                            var totalPointsOfCards = valueOfFirstCard.wizardPoint!!+valueOfSecondCard.wizardPoint!!
+                            var negativePoint = (totalPointsOfCards/valueOfFirstCard.housePoint!!) *(pastTime/10)
+                            Log.i("time",pastTime.toString())
+
+                            playerPoint -=negativePoint.toLong()
+                            playerPointTextView.text = playerPoint.toString()
+
+                        }else{
+
+                            var averagePoint = (valueOfFirstCard.wizardPoint!!+valueOfSecondCard.wizardPoint!!)/2
+                            var negativePoint = (averagePoint*valueOfFirstCard.housePoint!!*valueOfSecondCard.housePoint!!)*(pastTime/10)
+
+                            Log.i("time",pastTime.toString())
+                            playerPoint -=negativePoint.toLong()
+                            playerPointTextView.text = playerPoint.toString()
+                        }
+
+
+
+
+
+                        val handler = Handler()
+                        handler.postDelayed(
+                            Runnable {  ResetGame(imageViewList)  },
+                            500
+                        )
+
+
+                    }
+
+                }else if ( !isOneCardFlipped && !isTwoCardsFlipped){
+                    firstCard = imageView
+                    val valueOfElement = hashMap.getValue(imageView)
+                    valueOfElement.isFlipped = true
+                    imageView.setImageBitmap(ReturnBitmap(valueOfElement.photoStringBase64!!))
+                    isOneCardFlipped = true
+
+
+                }
+
+            }
+
+        }
+
+
+
+
+
+
+
+    }//ONCREATE
+
+
+
+    override fun onStart() {
+        super.onStart()
+
+        val timer = object: CountDownTimer(46000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+
+                pastTime = 46000F/1000F - millisUntilFinished/1000F
+                remainingTime = millisUntilFinished/1000F
+
+                timeText.text = ""+  remainingTime
+
+
+
+
+            }
+
+            override fun onFinish() {
+
+                /* val builder = AlertDialog.Builder(applicationContext)
+                 builder.setMessage("You lose, time is up!")
+                     .setPositiveButton("Go back",
+                         DialogInterface.OnClickListener { dialog, id ->
+
+
+
+                             val intent = Intent(applicationContext, FeedActivity::class.java)
+                             startActivity(intent)
+
+                         })
+
+                 // Create the AlertDialog object and return it
+                 builder.create()
+                 builder.show()*/
+
+
+                if(isInGame){
+                    Toast.makeText(applicationContext,"Süre Bitti!",Toast.LENGTH_LONG).show()
+                    val intent = Intent(applicationContext, FeedActivity::class.java)
+                    intent.putExtra("email",email)
+                    startActivity(intent)
+                    mediaPlayer1.start()
+                    finish()
+                    mediaPLayer.stop()
+                }
+
+            }
+        }
+        timer.start()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        isInGame=true
+
+    }
+
+    fun ResetGame(imageViewList : List<ImageView>){
+
+
+
+        for(imageView in imageViewList){
+
+
+            imageView.setImageResource(R.drawable.arkason)
+            firstCard = null
+            secondCard = null
+            isTwoCardsFlipped = false
+            isOneCardFlipped = false
+
+        }
+    }
+
+    fun InitMemoryCard(houseName: String, wizardName: String, memoryCard: MemoryCardData) {
+
+
+        val db = FirebaseFirestore.getInstance()
+        val docRef = db.collection(houseName).document(wizardName)
+
+        docRef.get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+
+                    if(document.data == null){
+                        Log.e("bosbos","DATA IS NULLLLLLLLLLLLLL!!!!!!!!!!!!!")
+                    }
+
+
+
+                    val houseName = document.data!!["ev"].toString()
+                    val wizardPoint = document.data!!["puan"] as Long
+                    val housePoint = document.data!!["evpuanı"] as Long
+                    val photoBase64 = document.data!!["foto"].toString()
+                    memoryCard.isFlipped = false
+                    memoryCard.isMatched = false
+                    memoryCard.houseName = houseName
+                    memoryCard.wizardPoint = wizardPoint
+                    memoryCard.photoStringBase64 = photoBase64
+                    memoryCard.housePoint = housePoint
+
+                } else {
+                    Log.d("TAG", "No such document")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d("TAG", "get failed with ", exception)
+            }
+    }
+
+    fun ReturnBitmap(base64String: String): Bitmap {
+
+        val imageBytes = Base64.decode(base64String, Base64.DEFAULT)
+        val decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+        return decodedImage
+    }
+}
+package com.example.harrypottergame
+
+import android.content.DialogInterface
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.media.MediaPlayer
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.os.CountDownTimer
+import android.os.Handler
+import android.util.Base64
+import android.util.Log
+import android.view.View
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FirebaseFirestore
+import org.w3c.dom.Text
+
+
+class TwoTwo_2Activity : AppCompatActivity() {
+
+    private lateinit var image1: ImageView
+    private lateinit var image2: ImageView
+    private lateinit var image3: ImageView
+    private lateinit var image4: ImageView
+
+
+    private lateinit var firstPlayerTextView: TextView
+    private lateinit var secondPlayerTextView: TextView
+    private lateinit var secondPlayerScoreTextView: TextView
+    private lateinit var firstPlayerScoreTextView: TextView
+    private lateinit var timeTextView: TextView
+
+    var isOneCardFlipped: Boolean = false
+    var isTwoCardsFlipped: Boolean = false
+
+    private var firstCard: ImageView? = null
+    private var secondCard: ImageView? = null
+    private var isFirstPlayerTurn: Boolean = true
+    private var isSecondPlayerTurn: Boolean = false
+    private var isInGame : Boolean = true;
+    private var firstPlayerScore = 0;
+    private var secondPlayerScore = 0;
+    private var firstPlayerPoint :Long =0
+    private var secondPlayerPoint:Long = 0
+
+    private var winMessage = ""
+
+
+
+    private lateinit var mediaPLayer : MediaPlayer
+    private lateinit var mediaPlayer1 : MediaPlayer
+    private lateinit var mediaPlayer2 : MediaPlayer
+    private lateinit var mediaPlayer3 : MediaPlayer
+
+    var email = String()
+
+    var memoryCardDataListg = mutableListOf<MemoryCardData>()
+    var memoryCardDataLists = mutableListOf<MemoryCardData>()
+    var memoryCardDataListh = mutableListOf<MemoryCardData>()
+    var memoryCardDataListr = mutableListOf<MemoryCardData>()
+
+    var tempListg = mutableListOf<MemoryCardData>()
+    var tempLists = mutableListOf<MemoryCardData>()
+    var tempListh = mutableListOf<MemoryCardData>()
+    var tempListr = mutableListOf<MemoryCardData>()
+
+    var tempTempList = mutableListOf<MemoryCardData>()
+
+
+    var allTempList = mutableListOf<MemoryCardData>()
+
+
+
+
+
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_two_two2)
+
+        email = intent.getStringExtra("email")!!
+
+        var hashMap: HashMap<ImageView, MemoryCardData> = HashMap<ImageView, MemoryCardData>()
+        var imageViewList = mutableListOf<ImageView>()
+
+
+        if(!this::mediaPLayer.isInitialized){
+            mediaPLayer = MediaPlayer.create(this, R.raw.prologue)
+            mediaPLayer.start()
+
+        }
+        if(!this::mediaPlayer1.isInitialized){
+            mediaPlayer1 = MediaPlayer.create(this, R.raw.shocked)
+
+
+        }
+        if(!this::mediaPlayer2.isInitialized){
+            mediaPlayer2 = MediaPlayer.create(this, R.raw.congratulations)
+
+
+        }
+        if(!this::mediaPlayer3.isInitialized){
+            mediaPlayer3 = MediaPlayer.create(this, R.raw.dogrukart)
+
+
+        }
+
+
+
+
+
+
+
+
+        timeTextView = findViewById<TextView>(R.id.timeTextView2)
+
+        image1 = findViewById<ImageView>(R.id.imageView27)
+        image2 = findViewById<ImageView>(R.id.imageView22)
+        image3 = findViewById<ImageView>(R.id.imageView23)
+        image4 = findViewById<ImageView>(R.id.imageView24)
+
+        firstPlayerTextView = findViewById<TextView>(R.id.player1id)
+        secondPlayerTextView = findViewById<TextView>(R.id.player2id)
+        firstPlayerScoreTextView = findViewById<TextView>(R.id.player1scoreid)
+        secondPlayerScoreTextView = findViewById<TextView>(R.id.player2scoreid)
+
+        secondPlayerTextView.visibility = View.INVISIBLE
+
+
+
+
+        var MemoryCardData1 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData2 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData3 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData4 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData5 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData6 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData7 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData8 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData9 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData10 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData11 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData12 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData13 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData14 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData15 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData16 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData17 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData18 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData19 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData20 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData21 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData22 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData23 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData24 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData25 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData26 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData27 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData28 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData29 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData30 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData31 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData32 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData33 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData34 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData35 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData36 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData37 = MemoryCardData(null, null, null, null, null, null)
+
+
+        memoryCardDataListg.add(MemoryCardData1)
+        memoryCardDataListg.add(MemoryCardData2)
+        memoryCardDataListg.add(MemoryCardData3)
+        memoryCardDataListg.add(MemoryCardData4)
+        memoryCardDataListg.add(MemoryCardData5)
+        memoryCardDataListg.add(MemoryCardData6)
+        memoryCardDataListg.add(MemoryCardData7)
+        memoryCardDataListg.add(MemoryCardData8)
+        memoryCardDataListg.add(MemoryCardData9)
+        memoryCardDataListg.add(MemoryCardData10)
+
+
+        memoryCardDataLists.add(MemoryCardData11)
+        memoryCardDataLists.add(MemoryCardData12)
+        memoryCardDataLists.add(MemoryCardData13)
+        memoryCardDataLists.add(MemoryCardData14)
+        memoryCardDataLists.add(MemoryCardData15)
+        memoryCardDataLists.add(MemoryCardData16)
+        memoryCardDataLists.add(MemoryCardData17)
+        memoryCardDataLists.add(MemoryCardData18)
+        memoryCardDataLists.add(MemoryCardData19)
+        memoryCardDataLists.add(MemoryCardData20)
+        memoryCardDataLists.add(MemoryCardData21)
+
+
+
+        memoryCardDataListh.add(MemoryCardData22)
+        memoryCardDataListh.add(MemoryCardData23)
+        memoryCardDataListh.add(MemoryCardData24)
+        memoryCardDataListh.add(MemoryCardData25)
+        memoryCardDataListh.add(MemoryCardData26)
+        memoryCardDataListh.add(MemoryCardData27)
+        memoryCardDataListh.add(MemoryCardData28)
+        memoryCardDataListh.add(MemoryCardData29)
+        memoryCardDataListh.add(MemoryCardData30)
+
+
+
+        memoryCardDataListr.add(MemoryCardData31)
+        memoryCardDataListr.add(MemoryCardData32)
+        memoryCardDataListr.add(MemoryCardData33)
+        memoryCardDataListr.add(MemoryCardData34)
+        memoryCardDataListr.add(MemoryCardData35)
+        memoryCardDataListr.add(MemoryCardData36)
+        memoryCardDataListr.add(MemoryCardData37)
+
+
+
+        //huff ilk 2 si,
+        //raven ilk 3 ü
+
+
+
+        InitMemoryCard("gryffindor", "AlbusDumbledore",MemoryCardData1)
+        InitMemoryCard("gryffindor", "ArthurWeasley", MemoryCardData2)
+        InitMemoryCard("gryffindor", "HarryPotter", MemoryCardData3)
+        InitMemoryCard("gryffindor", "HermioneGranger", MemoryCardData4)
+        InitMemoryCard("gryffindor", "LilyPotter", MemoryCardData5)
+        InitMemoryCard("gryffindor", "MinervaMcGonagall", MemoryCardData6)
+        InitMemoryCard("gryffindor", "PeterPettigrew", MemoryCardData7)
+        InitMemoryCard("gryffindor", "RemusLupin", MemoryCardData8)
+        InitMemoryCard("gryffindor", "RubeusHagrid", MemoryCardData9)
+        InitMemoryCard("gryffindor", "SiriusBlack", MemoryCardData10)
+
+
+
+
+        InitMemoryCard("slytherin", "AndromedaTonks", MemoryCardData11)
+        InitMemoryCard("slytherin", "BellatrixLestrange", MemoryCardData12)
+        InitMemoryCard("slytherin", "DoloresUmbridge", MemoryCardData13)
+        InitMemoryCard("slytherin", "DracoMalfoy", MemoryCardData14)
+        InitMemoryCard("slytherin", "EvanRosier", MemoryCardData15)
+        InitMemoryCard("slytherin", "HoraceSlughorn", MemoryCardData16)
+        InitMemoryCard("slytherin", "LetaLestrange", MemoryCardData17)
+        InitMemoryCard("slytherin", "LuciusMalfoy", MemoryCardData18)
+        InitMemoryCard("slytherin", "NarcissaMalfoy", MemoryCardData19)
+        InitMemoryCard("slytherin", "SeverusSnape", MemoryCardData20)
+        InitMemoryCard("slytherin", "TomRiddle", MemoryCardData21)
+
+
+
+
+        InitMemoryCard("hufflepuff", "CedricDiggory",MemoryCardData22)
+        InitMemoryCard("hufflepuff", "ErnestMacmillan", MemoryCardData23)
+        InitMemoryCard("hufflepuff", "FatFriar", MemoryCardData24)
+        InitMemoryCard("hufflepuff", "HannahAbbott", MemoryCardData25)
+        InitMemoryCard("hufflepuff", "HelgaHufflepuff", MemoryCardData26)
+        InitMemoryCard("hufflepuff", "NymphadoraTonks", MemoryCardData27)
+        InitMemoryCard("hufflepuff", "PomonaSprout", MemoryCardData28)
+        InitMemoryCard("hufflepuff", "SilvanusKettleburn", MemoryCardData29)
+        InitMemoryCard("hufflepuff", "TedLupin", MemoryCardData30)
+
+
+
+        InitMemoryCard("ravenclaw", "FiliusFlitwick",MemoryCardData31)
+        InitMemoryCard("ravenclaw", "GarrickOllivander", MemoryCardData32)
+        InitMemoryCard("ravenclaw", "MarcusBelby", MemoryCardData33)
+        InitMemoryCard("ravenclaw", "MyrtleWarren", MemoryCardData34)
+        InitMemoryCard("ravenclaw", "PadmaPatil", MemoryCardData35)
+        InitMemoryCard("ravenclaw", "QuirinusQuirrell", MemoryCardData36)
+        InitMemoryCard("ravenclaw", "RowenaRavenclaw", MemoryCardData37)
+
+        memoryCardDataListg.shuffle()
+        memoryCardDataLists.shuffle()
+        memoryCardDataListh.shuffle()
+        memoryCardDataListr.shuffle()
+
+        tempListg = memoryCardDataListg.take(10) as MutableList<MemoryCardData>
+        tempLists = memoryCardDataLists.take(11) as MutableList<MemoryCardData>
+        tempListh = memoryCardDataListh.take(9) as MutableList<MemoryCardData>
+        tempListr = memoryCardDataListr.take(7) as MutableList<MemoryCardData>
+
+        tempTempList.addAll(tempLists)
+        tempTempList.addAll(tempListg)
+        tempTempList.addAll(tempListh)
+        tempTempList.addAll(tempListr)
+
+        tempTempList.shuffle()
+        allTempList = tempTempList.take(2) as MutableList<MemoryCardData>
+
+
+        allTempList.addAll(allTempList)
+        allTempList.shuffle()
+
+
+
+        imageViewList.add(image1)
+        imageViewList.add(image2)
+        imageViewList.add(image3)
+        imageViewList.add(image4)
+
+
+
+        hashMap.put(image1,allTempList[0])
+        hashMap.put(image2,allTempList[1])
+        hashMap.put(image3,allTempList[2])
+        hashMap.put(image4,allTempList[3])
+
+
+        for (imageView in imageViewList) {
+
+            imageView.setOnClickListener {
+
+                if (isOneCardFlipped) {
+
+
+                    val valueOfElement = hashMap.getValue(imageView)
+                    valueOfElement.isFlipped = true
+                    isTwoCardsFlipped = true
+                    imageView.setImageBitmap(ReturnBitmap(valueOfElement.photoStringBase64!!))
+                    secondCard = imageView
+                    var valueOfFirstCard = hashMap.getValue(firstCard!!)
+                    var valueOfSecondCard = hashMap.getValue(secondCard!!)
+
+
+                    if (valueOfFirstCard.photoStringBase64 == valueOfSecondCard.photoStringBase64) {
+                        mediaPlayer3.start()
+
+                        firstCard!!.setOnClickListener(null)
+                        secondCard!!.setOnClickListener(null)
+                        imageViewList.remove(firstCard)
+                        imageViewList.remove(secondCard)
+                        firstCard = null
+                        secondCard = null
+                        isOneCardFlipped = false
+                        isTwoCardsFlipped = false
+
+                        if (isFirstPlayerTurn) {
+                          var correctPoint = 2* valueOfFirstCard.housePoint!! * valueOfFirstCard.wizardPoint!!
+                            firstPlayerPoint += correctPoint
+                            firstPlayerScoreTextView.text = firstPlayerPoint.toString()
+                            firstPlayerScore += 1;
+
+                        } else {
+                            var correctPoint = 2* valueOfFirstCard.housePoint!! * valueOfFirstCard.wizardPoint!!
+                            secondPlayerPoint += correctPoint
+                            secondPlayerScoreTextView.text = secondPlayerPoint.toString()
+                            secondPlayerScore += 1;
+                        }
+
+                        if (firstPlayerScore + secondPlayerScore == 2) {
+                            mediaPLayer.stop()
+                            mediaPlayer2.start()
+
+                            isInGame = false
+                            //BURASI!'1!!!!!!!!!!!!!!!!
+
+                            if (firstPlayerScore > secondPlayerScore) {
+
+                                winMessage =" "+firstPlayerPoint+" PUAN İLE OYUNCU 1 KAZANDI!!"+"\n Oyuncu 2 puanı: "+secondPlayerPoint
+
+                            } else {
+
+                                winMessage =" "+secondPlayerPoint+" PUAN İLE OYUNCU 2 KAZANDI!!"+"\n Oyuncu 1 puanı: "+firstPlayerPoint
+                            }
+
+
+                            val builder = AlertDialog.Builder(this)
+                            builder.setMessage(winMessage)
+                                .setPositiveButton("Geri Dön",
+                                    DialogInterface.OnClickListener { dialog, id ->
+
+
+                                        val intent = Intent(this, FeedActivity::class.java)
+                                        intent.putExtra("email",email)
+                                        startActivity(intent)
+
+                                    })
+
+                            // Create the AlertDialog object and return it
+                            builder.create()
+                            builder.show()
+
+                        }
+
+                    } else {
+                        if (isFirstPlayerTurn) {
+
+                            //FirstPlayer lose condition
+
+                            if(valueOfFirstCard.houseName == valueOfSecondCard.houseName){
+
+                                var negativePoint =(valueOfFirstCard.wizardPoint!!+ valueOfSecondCard.wizardPoint!!)/valueOfFirstCard.housePoint!!
+                                firstPlayerPoint -= negativePoint
+                                firstPlayerScoreTextView.text = firstPlayerPoint.toString()
+
+                            }else{
+                                var averagePoint = (valueOfFirstCard.wizardPoint!!+valueOfSecondCard.wizardPoint!!)/2
+                                var negativePoint = averagePoint*valueOfFirstCard.housePoint!!*valueOfSecondCard.housePoint!!
+                                firstPlayerPoint-=negativePoint
+                                firstPlayerScoreTextView.text = firstPlayerPoint.toString()
+                            }
+
+                            isFirstPlayerTurn = false;
+                            isSecondPlayerTurn = true;
+                            secondPlayerTextView.visibility = View.VISIBLE
+                            firstPlayerTextView.visibility = View.INVISIBLE
+
+
+                        } else {
+
+                            //SecondPlayer lose condition
+                            if(valueOfFirstCard.houseName == valueOfSecondCard.houseName){
+
+                                var negativePoint =(valueOfFirstCard.wizardPoint!!+ valueOfSecondCard.wizardPoint!!)/valueOfFirstCard.housePoint!!
+                                secondPlayerPoint -= negativePoint
+                                secondPlayerScoreTextView.text = secondPlayerPoint.toString()
+
+                            }else{
+                                var averagePoint = (valueOfFirstCard.wizardPoint!!+valueOfSecondCard.wizardPoint!!)/2
+                                var negativePoint = averagePoint*valueOfFirstCard.housePoint!!*valueOfSecondCard.housePoint!!
+                                secondPlayerPoint-=negativePoint
+                                secondPlayerScoreTextView.text = secondPlayerPoint.toString()
+                            }
+
+
+                            isFirstPlayerTurn = true;
+                            isSecondPlayerTurn = false;
+                            firstPlayerTextView.visibility = View.VISIBLE
+                            secondPlayerTextView.visibility = View.INVISIBLE
+
+                        }
+                        //DONT MATCH RESET THE GAME
+                        //Delay ekle
+                        val handler = Handler()
+                        handler.postDelayed(
+                            Runnable { ResetGame(imageViewList) },
+                            500
+                        )
+
+
+                    }
+
+                } else if (!isOneCardFlipped && !isTwoCardsFlipped) {
+
+                    //Hiç bir kart tıklanmmaışsa
+
+                    firstCard = imageView
+                    val valueOfElement = hashMap.getValue(imageView)
+                    valueOfElement.isFlipped = true
+                    imageView.setImageBitmap(ReturnBitmap(valueOfElement.photoStringBase64!!))
+                    isOneCardFlipped = true
+
+                }
+
+            }
+
+        }
+
+
+        //  val db = FirebaseFirestore.getInstance()
+        // val docRef = db.collection("slytherin").document("DoloresUmbridge")
+
+
+    }//OnCreate ENDS!!
+
+    override fun onStart() {
+        super.onStart()
+
+        val timer = object: CountDownTimer(61000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+
+                timeTextView.text = ""+ millisUntilFinished/1000
+
+
+            }
+
+            override fun onFinish() {
+
+                /* val builder = AlertDialog.Builder(applicationContext)
+                 builder.setMessage("You lose, time is up!")
+                     .setPositiveButton("Go back",
+                         DialogInterface.OnClickListener { dialog, id ->
+
+
+
+                             val intent = Intent(applicationContext, FeedActivity::class.java)
+                             startActivity(intent)
+
+                         })
+
+                 // Create the AlertDialog object and return it
+                 builder.create()
+                 builder.show()*/
+
+
+                if(isInGame){
+
+                    if(firstPlayerPoint>secondPlayerPoint){
+                        Toast.makeText(applicationContext,"Süreniz bitti, "+firstPlayerPoint+" puan ile BİRİNCİ oyuncu kazandı", Toast.LENGTH_LONG).show()
+                    }else{
+                        Toast.makeText(applicationContext,"Süreniz bitti, "+secondPlayerPoint+" puan ile İKİNCİ oyuncu kazandı", Toast.LENGTH_LONG).show()
+                    }
+
+
+
+                    val intent = Intent(applicationContext, FeedActivity::class.java)
+                    intent.putExtra("email",email)
+                    startActivity(intent)
+                    mediaPlayer1.start()
+                    finish()
+                    mediaPLayer.stop()
+                }
+
+            }
+        }
+        timer.start()
+    }
+
+
+    fun ResetGame(imageViewList: List<ImageView>) {
+
+
+        for (imageView in imageViewList) {
+
+
+            imageView.setImageResource(R.drawable.arkason)
+            firstCard = null
+            secondCard = null
+            isTwoCardsFlipped = false
+            isOneCardFlipped = false
+
+        }
+    }
+
+    fun ReturnBitmap(base64String: String): Bitmap {
+
+        val imageBytes = Base64.decode(base64String, Base64.DEFAULT)
+        val decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+        return decodedImage
+    }
+
+
+    fun InitMemoryCard(houseName: String, wizardName: String, memoryCard: MemoryCardData) {
+
+
+        val db = FirebaseFirestore.getInstance()
+        val docRef = db.collection(houseName).document(wizardName)
+
+        docRef.get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+
+                    if(document.data == null){
+                        Log.e("bosbos","DATA IS NULLLLLLLLLLLLLL!!!!!!!!!!!!!")
+                    }
+
+
+
+                    val houseName = document.data!!["ev"].toString()
+                    val wizardPoint = document.data!!["puan"] as Long
+                    val housePoint = document.data!!["evpuanı"] as Long
+                    val photoBase64 = document.data!!["foto"].toString()
+                    memoryCard.isFlipped = false
+                    memoryCard.isMatched = false
+                    memoryCard.houseName = houseName
+                    memoryCard.wizardPoint = wizardPoint
+                    memoryCard.photoStringBase64 = photoBase64
+                    memoryCard.housePoint = housePoint
+
+                } else {
+                    Log.d("TAG", "No such document")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d("TAG", "get failed with ", exception)
+            }
+    }
+
+}
+
+    package com.example.harrypottergame
+
+
+
+import android.content.DialogInterface
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.media.MediaPlayer
+import android.os.Bundle
+import android.os.CountDownTimer
+import android.os.Handler
+import android.util.Base64
+import android.util.Log
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ServerTimestamp
+
+
+class TwoTwoActivity : AppCompatActivity() {
+    private lateinit var image1 : ImageView
+    private lateinit var image2 : ImageView
+    private lateinit var image3 : ImageView
+    private lateinit var image4 : ImageView
+
+    private lateinit var testImage : ImageView
+    private lateinit var  timeText :TextView
+    private lateinit var  playerPointTextView :TextView
+    var isOneCardFlipped :Boolean = false
+    var isTwoCardsFlipped :Boolean = false
+    var isInGame :Boolean = true
+    private  var firstCard : ImageView? = null
+    private  var secondCard : ImageView? = null
+    private var score =0;
+    private var remainingTime :Float =0F
+    private var pastTime :Float =0F
+    private var playerPoint :Long =0
+
+
+    private lateinit var mediaPLayer : MediaPlayer
+    private lateinit var mediaPlayer1 : MediaPlayer
+    private lateinit var mediaPlayer2 : MediaPlayer
+    private lateinit var mediaPlayer3 : MediaPlayer
+    var email = String()
+
+    var memoryCardDataListg = mutableListOf<MemoryCardData>()
+    var memoryCardDataLists = mutableListOf<MemoryCardData>()
+    var memoryCardDataListh = mutableListOf<MemoryCardData>()
+    var memoryCardDataListr = mutableListOf<MemoryCardData>()
+
+    var tempListg = mutableListOf<MemoryCardData>()
+    var tempLists = mutableListOf<MemoryCardData>()
+    var tempListh = mutableListOf<MemoryCardData>()
+    var tempListr = mutableListOf<MemoryCardData>()
+
+    var tempTempList = mutableListOf<MemoryCardData>()
+    var allTempList = mutableListOf<MemoryCardData>()
+
+
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_twotwo)
+        var hashMap:HashMap<ImageView,MemoryCardData> = HashMap<ImageView,MemoryCardData>()
+        var imageViewList = mutableListOf<ImageView>()
+        var memoryCardDataList = mutableListOf<MemoryCardData>()
+
+       email = intent.getStringExtra("email")!!
+
+
+        if(!this::mediaPLayer.isInitialized){
+            mediaPLayer = MediaPlayer.create(this, R.raw.prologue)
+            mediaPLayer.start()
+
+        }
+        if(!this::mediaPlayer1.isInitialized){
+            mediaPlayer1 = MediaPlayer.create(this, R.raw.shocked)
+
+
+        }
+        if(!this::mediaPlayer2.isInitialized){
+            mediaPlayer2 = MediaPlayer.create(this, R.raw.congratulations)
+
+
+        }
+        if(!this::mediaPlayer3.isInitialized){
+            mediaPlayer3 = MediaPlayer.create(this, R.raw.dogrukart)
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        image1 = findViewById<ImageView>(R.id.imageView12)
+        image2 = findViewById<ImageView>(R.id.imageView13)
+        image3 = findViewById<ImageView>(R.id.imageView14)
+        image4 = findViewById<ImageView>(R.id.imageView15)
+        timeText = findViewById<TextView>(R.id.timeTextView)
+        playerPointTextView = findViewById<TextView>(R.id.playerPointTextView)
+
+
+
+
+        var MemoryCardData1 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData2 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData3 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData4 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData5 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData6 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData7 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData8 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData9 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData10 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData11 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData12 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData13 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData14 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData15 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData16 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData17 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData18 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData19 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData20 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData21 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData22 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData23 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData24 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData25 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData26 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData27 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData28 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData29 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData30 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData31 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData32 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData33 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData34 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData35 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData36 = MemoryCardData(null, null, null, null, null, null)
+        var MemoryCardData37 = MemoryCardData(null, null, null, null, null, null)
+
+
+        memoryCardDataListg.add(MemoryCardData1)
+        memoryCardDataListg.add(MemoryCardData2)
+        memoryCardDataListg.add(MemoryCardData3)
+        memoryCardDataListg.add(MemoryCardData4)
+        memoryCardDataListg.add(MemoryCardData5)
+        memoryCardDataListg.add(MemoryCardData6)
+        memoryCardDataListg.add(MemoryCardData7)
+        memoryCardDataListg.add(MemoryCardData8)
+        memoryCardDataListg.add(MemoryCardData9)
+        memoryCardDataListg.add(MemoryCardData10)
+
+
+        memoryCardDataLists.add(MemoryCardData11)
+        memoryCardDataLists.add(MemoryCardData12)
+        memoryCardDataLists.add(MemoryCardData13)
+        memoryCardDataLists.add(MemoryCardData14)
+        memoryCardDataLists.add(MemoryCardData15)
+        memoryCardDataLists.add(MemoryCardData16)
+        memoryCardDataLists.add(MemoryCardData17)
+        memoryCardDataLists.add(MemoryCardData18)
+        memoryCardDataLists.add(MemoryCardData19)
+        memoryCardDataLists.add(MemoryCardData20)
+        memoryCardDataLists.add(MemoryCardData21)
+
+
+
+        memoryCardDataListh.add(MemoryCardData22)
+        memoryCardDataListh.add(MemoryCardData23)
+        memoryCardDataListh.add(MemoryCardData24)
+        memoryCardDataListh.add(MemoryCardData25)
+        memoryCardDataListh.add(MemoryCardData26)
+        memoryCardDataListh.add(MemoryCardData27)
+        memoryCardDataListh.add(MemoryCardData28)
+        memoryCardDataListh.add(MemoryCardData29)
+        memoryCardDataListh.add(MemoryCardData30)
+
+
+
+        memoryCardDataListr.add(MemoryCardData31)
+        memoryCardDataListr.add(MemoryCardData32)
+        memoryCardDataListr.add(MemoryCardData33)
+        memoryCardDataListr.add(MemoryCardData34)
+        memoryCardDataListr.add(MemoryCardData35)
+        memoryCardDataListr.add(MemoryCardData36)
+        memoryCardDataListr.add(MemoryCardData37)
+
+        //huff ilk 2 si,
+        //raven ilk 3 ü
+
+        InitMemoryCard("gryffindor", "AlbusDumbledore",MemoryCardData1)
+        InitMemoryCard("gryffindor", "ArthurWeasley", MemoryCardData2)
+        InitMemoryCard("gryffindor", "HarryPotter", MemoryCardData3)
+        InitMemoryCard("gryffindor", "HermioneGranger", MemoryCardData4)
+        InitMemoryCard("gryffindor", "LilyPotter", MemoryCardData5)
+        InitMemoryCard("gryffindor", "MinervaMcGonagall", MemoryCardData6)
+        InitMemoryCard("gryffindor", "PeterPettigrew", MemoryCardData7)
+        InitMemoryCard("gryffindor", "RemusLupin", MemoryCardData8)
+        InitMemoryCard("gryffindor", "RubeusHagrid", MemoryCardData9)
+        InitMemoryCard("gryffindor", "SiriusBlack", MemoryCardData10)
+
+
+
+
+        InitMemoryCard("slytherin", "AndromedaTonks", MemoryCardData11)
+        InitMemoryCard("slytherin", "BellatrixLestrange", MemoryCardData12)
+        InitMemoryCard("slytherin", "DoloresUmbridge", MemoryCardData13)
+        InitMemoryCard("slytherin", "DracoMalfoy", MemoryCardData14)
+        InitMemoryCard("slytherin", "EvanRosier", MemoryCardData15)
+        InitMemoryCard("slytherin", "HoraceSlughorn", MemoryCardData16)
+        InitMemoryCard("slytherin", "LetaLestrange", MemoryCardData17)
+        InitMemoryCard("slytherin", "LuciusMalfoy", MemoryCardData18)
+        InitMemoryCard("slytherin", "NarcissaMalfoy", MemoryCardData19)
+        InitMemoryCard("slytherin", "SeverusSnape", MemoryCardData20)
+        InitMemoryCard("slytherin", "TomRiddle", MemoryCardData21)
+
+
+
+
+        InitMemoryCard("hufflepuff", "CedricDiggory",MemoryCardData22)
+        InitMemoryCard("hufflepuff", "ErnestMacmillan", MemoryCardData23)
+        InitMemoryCard("hufflepuff", "FatFriar", MemoryCardData24)
+        InitMemoryCard("hufflepuff", "HannahAbbott", MemoryCardData25)
+        InitMemoryCard("hufflepuff", "HelgaHufflepuff", MemoryCardData26)
+        InitMemoryCard("hufflepuff", "NymphadoraTonks", MemoryCardData27)
+        InitMemoryCard("hufflepuff", "PomonaSprout", MemoryCardData28)
+        InitMemoryCard("hufflepuff", "SilvanusKettleburn", MemoryCardData29)
+        InitMemoryCard("hufflepuff", "TedLupin", MemoryCardData30)
+
+
+
+        InitMemoryCard("ravenclaw", "FiliusFlitwick",MemoryCardData31)
+        InitMemoryCard("ravenclaw", "GarrickOllivander", MemoryCardData32)
+        InitMemoryCard("ravenclaw", "MarcusBelby", MemoryCardData33)
+        InitMemoryCard("ravenclaw", "MyrtleWarren", MemoryCardData34)
+        InitMemoryCard("ravenclaw", "PadmaPatil", MemoryCardData35)
+        InitMemoryCard("ravenclaw", "QuirinusQuirrell", MemoryCardData36)
+        InitMemoryCard("ravenclaw", "RowenaRavenclaw", MemoryCardData37)
+
+
+
+        memoryCardDataListg.shuffle()
+        memoryCardDataLists.shuffle()
+        memoryCardDataListh.shuffle()
+        memoryCardDataListr.shuffle()
+
+        tempListg = memoryCardDataListg.take(2) as MutableList<MemoryCardData>
+        tempLists = memoryCardDataLists.take(2) as MutableList<MemoryCardData>
+        tempListh = memoryCardDataListh.take(2) as MutableList<MemoryCardData>
+        tempListr = memoryCardDataListr.take(2) as MutableList<MemoryCardData>
+
+        tempTempList.addAll(tempLists)
+        tempTempList.addAll(tempListg)
+        tempTempList.addAll(tempListh)
+        tempTempList.addAll(tempListr)
+
+        tempTempList.shuffle()
+        allTempList = tempTempList.take(2) as MutableList<MemoryCardData>
+
+
+        allTempList.addAll(allTempList)
+        allTempList.shuffle()
+
+
+        imageViewList.add(image1)
+        imageViewList.add(image2)
+        imageViewList.add(image3)
+        imageViewList.add(image4)
+
+
+        hashMap.put(image1,allTempList[0])
+        hashMap.put(image2,allTempList[1])
+        hashMap.put(image3,allTempList[2])
+        hashMap.put(image4,allTempList[3])
+
+
+
+
+
+        for (imageView in imageViewList) {
+
+            imageView.setOnClickListener{
+
+                if(isOneCardFlipped){
+
+                    val valueOfElement = hashMap.getValue(imageView)
+                    valueOfElement.isFlipped = true
+                    isTwoCardsFlipped = true
+                    imageView.setImageBitmap(ReturnBitmap(valueOfElement.photoStringBase64!!))
+                    secondCard = imageView
+                    var valueOfFirstCard = hashMap.getValue(firstCard!!)
+                    var valueOfSecondCard = hashMap.getValue(secondCard!!)
+
+                    if(valueOfFirstCard.photoStringBase64 == valueOfSecondCard.photoStringBase64){
+                        mediaPlayer3.start()
+
+                        //match olduysa
+
+                        var addPoint = (2*valueOfFirstCard.wizardPoint!!*valueOfFirstCard.housePoint!!)*(remainingTime/10)
+                        //Toast.makeText(applicationContext,remainingTime.toString(),Toast.LENGTH_LONG).show()
+                        playerPoint += addPoint.toLong()
+                        playerPointTextView.text = playerPoint.toString()
+
+
+
+                        firstCard!!.setOnClickListener(null)
+                        secondCard!!.setOnClickListener(null)
+                        imageViewList.remove(firstCard)
+                        imageViewList.remove(secondCard)
+                        firstCard = null
+                        secondCard = null
+                        isOneCardFlipped = false
+                        isTwoCardsFlipped= false
+                        score +=1;
+                        if(score ==2){
+                            mediaPLayer.stop()
+                            mediaPlayer2.start()
+                            isInGame = false
+                            Toast.makeText(this,""+playerPoint+ " Puan ile oyunu BİTİRDİNİZ!!!"  ,Toast.LENGTH_LONG).show()
+                            val intent = Intent(this, FeedActivity::class.java)
+                            intent.putExtra("email",email)
+                            startActivity(intent)
+                        }
+
+
+                    }else{
+                        //DONT MATCH RESET THE GAME
+                        //Delay ekle
+
+                        if(valueOfFirstCard.houseName == valueOfSecondCard.houseName){
+
+                            var totalPointsOfCards = valueOfFirstCard.wizardPoint!!+valueOfSecondCard.wizardPoint!!
+                            var negativePoint = (totalPointsOfCards/valueOfFirstCard.housePoint!!) *(pastTime/10)
+                           // Toast.makeText(applicationContext,playerPoint.toString(),Toast.LENGTH_LONG).show()
+                            playerPoint -=negativePoint.toLong()
+                            playerPointTextView.text = playerPoint.toString()
+
+                        }else{
+
+                            var averagePoint = (valueOfFirstCard.wizardPoint!!+valueOfSecondCard.wizardPoint!!)/2
+                            var negativePoint = (averagePoint*valueOfFirstCard.housePoint!!*valueOfSecondCard.housePoint!!)*(pastTime/10)
+                            playerPoint -=negativePoint.toLong()
+                            playerPointTextView.text = playerPoint.toString()
+                        }
+
+
+
+
+
+                        val handler = Handler()
+                        handler.postDelayed(
+                            Runnable {  ResetGame(imageViewList)  },
+                            500
+                        )
+
+
+                    }
+
+                }else if ( !isOneCardFlipped && !isTwoCardsFlipped){
+                    firstCard = imageView
+                    val valueOfElement = hashMap.getValue(imageView)
+                    valueOfElement.isFlipped = true
+                    imageView.setImageBitmap(ReturnBitmap(valueOfElement.photoStringBase64!!))
+                    isOneCardFlipped = true
+
+
+                }
+
+            }
+
+        }
+        //Toast.makeText(applicationContext,allTempList.toString(),Toast.LENGTH_LONG).show()
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        val timer = object: CountDownTimer(46000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+
+                 pastTime = 46000F/1000F - millisUntilFinished/1000F
+                remainingTime = millisUntilFinished/1000F
+
+                timeText.text = ""+  remainingTime
+
+
+
+
+            }
+
+            override fun onFinish() {
+
+               /* val builder = AlertDialog.Builder(applicationContext)
+                builder.setMessage("You lose, time is up!")
+                    .setPositiveButton("Go back",
+                        DialogInterface.OnClickListener { dialog, id ->
+
+
+
+                            val intent = Intent(applicationContext, FeedActivity::class.java)
+                            startActivity(intent)
+
+                        })
+
+                // Create the AlertDialog object and return it
+                builder.create()
+                builder.show()*/
+
+
+                if(isInGame){
+                    Toast.makeText(applicationContext,"Süre Bitti!",Toast.LENGTH_LONG).show()
+                    val intent = Intent(applicationContext, FeedActivity::class.java)
+                    intent.putExtra("email",email)
+                    startActivity(intent)
+                    mediaPlayer1.start()
+                    finish()
+                    mediaPLayer.stop()
+                }
+
+            }
+        }
+        timer.start()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        isInGame=true
+
+    }
+
+    fun ResetGame(imageViewList : List<ImageView>){
+
+
+
+        for(imageView in imageViewList){
+
+
+            imageView.setImageResource(R.drawable.arkason)
+            firstCard = null
+            secondCard = null
+            isTwoCardsFlipped = false
+            isOneCardFlipped = false
+
+        }
+    }
+
+    fun InitMemoryCard(houseName: String, wizardName: String, memoryCard: MemoryCardData) {
+
+
+        val db = FirebaseFirestore.getInstance()
+        val docRef = db.collection(houseName).document(wizardName)
+
+        docRef.get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+
+                    if(document.data == null){
+                        Log.e("bosbos","DATA IS NULLLLLLLLLLLLLL!!!!!!!!!!!!!")
+                    }
+
+
+
+                    val houseName = document.data!!["ev"].toString()
+                    val wizardPoint = document.data!!["puan"] as Long
+                    val housePoint = document.data!!["evpuanı"] as Long
+                    val photoBase64 = document.data!!["foto"].toString()
+                    memoryCard.isFlipped = false
+                    memoryCard.isMatched = false
+                    memoryCard.houseName = houseName
+                    memoryCard.wizardPoint = wizardPoint
+                    memoryCard.photoStringBase64 = photoBase64
+                    memoryCard.housePoint = housePoint
+
+                } else {
+                    Log.d("TAG", "No such document")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d("TAG", "get failed with ", exception)
+            }
+    }
+
+    fun ReturnBitmap(base64String: String): Bitmap {
+
+        val imageBytes = Base64.decode(base64String, Base64.DEFAULT)
+        val decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+        return decodedImage
+    }
+
+
+
+    }
+
+package com.example.harrypottergame
+
+data class User(var username : String ?=null )
+
+
+
+
+
+
+
+
+
+
+
